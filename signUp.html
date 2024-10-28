@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="signUp.css" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <section class="wrap">
+      <header role="banner" class="contentTitle">
+        <button class="loginBtn" onclick="location.href='login.html'"></button>
+        <h1 class="title">아무 말 대잔치</h1>
+      </header>
+      <hr class="horizontal-rule" />
+      <!-- 회원가입 내용 입력 -->
+      <form class="signupForm">
+        <article class="loginArticle">
+          <h2 class="loginTxt">회원가입</h2>
+          <label for="profilePhoto" class="inputLabel">프로필 사진</label>
+          <label for="profilePhoto" class="inputPhoto">
+            <div><img src="images/포켓몬_잠만보.png" /></div>
+          </label>
+          <input
+            type="file"
+            id="profilePhoto"
+            class="inputImg"
+            accept="image/*"
+          />
+          <label for="inputEmail" class="inputLabel">이메일*</label>
+          <input
+            type="text"
+            id="inputEmail"
+            class="inputField"
+            placeholder="이메일을 입력하세요"
+            required
+          />
+          <label for="inputPasswd" class="inputLabel">비밀번호</label>
+          <input
+            type="password"
+            id="inputPasswd"
+            class="inputField"
+            placeholder="비밀번호를 입력하세요"
+            required
+          />
+          <label for="recheckPasswd" class="inputLabel">비밀번호 확인</label>
+          <input
+            type="password"
+            id="recheckPasswd"
+            class="inputField"
+            placeholder="비밀번호를 한번 더 입력하세요"
+            required
+          />
+          <label for="inputNickname" class="inputLabel">닉네임</label>
+          <input
+            type="text"
+            id="inputNickname"
+            class="inputField"
+            placeholder="닉네임을 입력하세요"
+            required
+          />
+          <button class="signupSubmitBtn">회원가입</button>
+          <a class="loginLink" href="login.html">로그인하러 가기</a>
+        </article>
+      </form>
+    </section>
+  </body>
+</html>
