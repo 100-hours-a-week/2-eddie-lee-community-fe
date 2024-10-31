@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="profileModify.css" />
+        <link rel="stylesheet" type="text/css" href="common.css" />
+        <title>ProfileModify</title>
+    </head>
+    <body>
+        <section class="wrap">
+            <header role="banner" class="banner">
+                <h1 class="title">아무 말 대잔치</h1>
+                <div class="usrProfileBox">
+                    <img class="usrProfile" src="images/profile_img.webp" />
+                </div>
+            </header>
+            <hr class="horizontal-rule" />
+            <article class="profileModifyArticle">
+                <h1 class="profileModifyTitle">회원정보수정</h1>
+                <label for="modifyProfilePhoto" class="modifyLabels"
+                    >프로필 사진*</label
+                >
+                <label for="modifyProfilePhoto" class="inputPhoto">
+                    <div class="profileSelectBox">
+                        <img
+                            class="profileSelect"
+                            id="profileImg"
+                            src="images/profile_img.webp"
+                        />
+                    </div>
+                    <input
+                        type="file"
+                        id="modifyProfilePhoto"
+                        class="inputImg"
+                        accept="image/*"
+                    />
+                </label>
+                <label class="modifyLabels" for="showEmail">이메일</label>
+                <p class="showEmail">eample@example.com</p>
+                <label class="modifyLabels" for="getNickname">닉네임</label>
+                <input
+                    type="text"
+                    class="getNickname"
+                    placeholder="현재닉네임"
+                />
+                <div class="helperText">*helperText</div>
+                <button class="modifyBtn" type="button">수정하기</button>
+                <a class="deleteProfile">회원 탈퇴</a>
+                <button class="completeModifyBtn" type="button">
+                    수정완료
+                </button>
+            </article>
+        </section>
+    </body>
+</html>
