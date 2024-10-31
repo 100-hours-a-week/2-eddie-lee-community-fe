@@ -1,38 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="login.css" />
-    <title>Log in</title>
-  </head>
-  <body>
-    <section class="wrap">
-      <article class="title">
-        <h1 class="titleTxt">아무 말 대잔치</h1>
-      </article>
-      <hr class="horizontal-rule" />
-      <form class="loginForm">
-        <article class="loginArticle">
-          <h2 class="loginTxt">로그인</h2>
-          <label for="inputEmail" class="inputLabel">이메일</label>
-          <input
-            type="text"
-            id="inputEmail"
-            class="inputField"
-            placeholder="이메일을 입력하세요"
-          />
-          <label for="inputPasswd" class="inputLabel">비밀번호</label>
-          <input
-            type="password"
-            id="inputPasswd"
-            class="inputField"
-            placeholder="비밀번호를 입력하세요"
-          />
-          <button class="loginSubmitBtn">로그인</button>
-          <a class="signUp" href="signUp.html">회원가입</a>
-        </article>
-      </form>
-    </section>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="login.css" />
+        <link rel="stylesheet" type="text/css" href="common.css" />
+        <title>Log in</title>
+    </head>
+    <body>
+        <section class="wrap">
+            <header role="banner" class="banner">
+                <h1 class="title">아무 말 대잔치</h1>
+            </header>
+            <hr class="horizontal-rule" />
+            <form class="loginForm">
+                <article class="loginArticle">
+                    <h2 class="loginTxt">로그인</h2>
+                    <label for="inputEmail" class="inputLabel">이메일</label>
+                    <input
+                        type="email"
+                        id="inputEmail"
+                        class="inputField"
+                        placeholder="이메일을 입력하세요"
+                        minlength="10"
+                        required
+                    />
+                    <!--이메일 유효성 검사-->
+                    <div class="wrongEmail">
+                        *올바른 이메일 주소 형식을 입력해주세요.<br />
+                        (예: example@example.com)
+                    </div>
+                    <label for="inputPasswd" class="inputLabel">비밀번호</label>
+                    <input
+                        type="password"
+                        id="inputPasswd"
+                        class="inputField"
+                        placeholder="비밀번호를 입력하세요"
+                        required
+                    />
+                    <div id="validPasswd">*비밀번호를 입력해주세요</div>
+                    <button type="button" class="loginSubmitBtn" id="loginBtn">
+                        로그인
+                    </button>
+                    <a class="signUp" href="signUp.html">회원가입</a>
+                </article>
+            </form>
+        </section>
+        <script src="login.js"></script>
+    </body>
 </html>
