@@ -1,0 +1,95 @@
+body {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(244, 245, 247, 1);
+    font-family: 'Noto Sans KR', sans-serif;
+    justify-content: center;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: transparent;
+    padding: 30px 0;
+}
+
+.banner {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 40%;
+    margin: 0 auto 0;
+}
+
+.banner .loginBtn {
+    /* position: absolute; */
+    width: 30px;
+    height: 50px;
+    justify-self: left;
+    background-image: url(images/KTB\ 줌\ 배경화면_yellow.png);
+    margin: 0;
+}
+
+.banner .title {
+    font-size: 32px;
+    color: #000;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.banner .usrProfileBox {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 70%;
+    margin-left: auto;
+    padding: 0;
+}
+
+.banner .usrProfileBox .usrProfile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.horizontal-rule {
+    width: 100%;
+    height: 1px;
+    border: 0;
+    background-color: #000;
+    margin: 30px auto 50px;
+}
+
+.hide {
+    display: none;
+}
+
+.helperText {
+    font-weight: bold;
+    color: red;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    background-color: #d9d9d9;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    font-size: 12px;
+    padding-inline: 30px;
+    padding-block: 15px;
+}
+
+.dropdown a:hover {
+    background-color: #e9e9e9;
+}

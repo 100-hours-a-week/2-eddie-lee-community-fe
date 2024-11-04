@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="/public/css/Posts.css" />
+        <link rel="stylesheet" type="text/css" href="/public/css/common.css" />
+        <title>Posts</title>
+    </head>
+    <body>
+        <section class="wrap">
+            <header role="banner" class="banner">
+                <h1 class="title">아무 말 대잔치</h1>
+                <div class="usrProfileBox" id="usrProfileBox">
+                    <img
+                        class="usrProfile"
+                        id="userProfile"
+                        src="/public/images/profile_img.webp"
+                    />
+                    <div class="dropdown" id="dropdown">
+                        <a href="http://localhost:3000/account/modify_user_info"
+                            >회원정보수정</a
+                        >
+                        <a href="http://localhost:3000/account/modify_passwd"
+                            >비밀번호수정</a
+                        >
+                        <a href="http://localhost:3000/account/logout"
+                            >로그아웃</a
+                        >
+                    </div>
+                </div>
+            </header>
+            <hr class="horizontal-rule" />
+            <article class="postBanner">
+                <p class="postBannerTxt">
+                    안녕하세요,<br />아무 말 대잔치
+                    <strong>게시판</strong> 입니다.
+                </p>
+            </article>
+            <article class="postArticle">
+                <div class="createPostDiv">
+                    <button
+                        class="createPostBtn"
+                        onclick="location.href='http://localhost:3000/post/create_post'"
+                    >
+                        게시글 작성
+                    </button>
+                </div>
+                <article class="postContentArea">
+                    <div class="postContent">
+                        <h3 class="postTitle">제목 1</h3>
+                        <div class="listAndTime">
+                            <ul class="socialList">
+                                <li class="socialListTxt" id="like">
+                                    좋아요 0
+                                </li>
+                                <li class="socialListTxt" id="comment">
+                                    댓글 0
+                                </li>
+                                <li class="socialListTxt" id="view">
+                                    조회수 0
+                                </li>
+                            </ul>
+                            <p class="time">2024.10.28 07:04:00</p>
+                        </div>
+                        <hr class="postHorizontal-rule" />
+                        <div class="editor">
+                            <div class="profileImgBox">
+                                <img
+                                    class="profileImg"
+                                    src="/public/images/profile_img.webp"
+                                />
+                            </div>
+                            <p class="editorNickname">작성자 1</p>
+                        </div>
+                    </div>
+                </article>
+            </article>
+        </section>
+    </body>
+</html>
