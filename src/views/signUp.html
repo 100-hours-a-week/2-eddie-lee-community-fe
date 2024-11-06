@@ -10,7 +10,14 @@
     <body>
         <section class="wrap">
             <header role="banner" class="banner">
-                <button class="loginBtn" id="loginBtn"></button>
+                <div class="goToLoginBox">
+                    <a href="http://localhost:3000/user/login">
+                        <img
+                            class="goToLoginImg"
+                            src="/public/images/back_arrow.png"
+                        />
+                    </a>
+                </div>
                 <h1 class="title">아무 말 대잔치</h1>
             </header>
             <hr class="horizontal-rule" />
@@ -42,6 +49,7 @@
                         type="file"
                         id="profilePhoto"
                         class="inputImg"
+                        name="profilePhoto"
                         accept="image/*"
                     />
 
@@ -50,6 +58,7 @@
                         type="email"
                         id="inputEmail"
                         class="inputField"
+                        name="email"
                         placeholder="이메일을 입력하세요"
                         required
                     />
@@ -72,6 +81,7 @@
                         id="inputPasswd"
                         class="inputField"
                         placeholder="비밀번호를 입력하세요"
+                        name="passwd"
                         required
                     />
                     <div id="noInputPasswd" class="helperText">
@@ -104,6 +114,7 @@
                         id="inputNickname"
                         class="inputField"
                         placeholder="닉네임을 입력하세요"
+                        name="nickname"
                         maxlength="15"
                         required
                     />
@@ -119,7 +130,12 @@
                     <div id="tooLongNickname" class="helperText hide">
                         *닉네임은 최대 10자까지 작성 가능합니다.
                     </div>
-                    <button class="signupSubmitBtn" id="signupBtn" disabled>
+                    <button
+                        class="signupSubmitBtn"
+                        id="signupBtn"
+                        type="submit"
+                        disabled
+                    >
                         회원가입
                     </button>
                     <a class="loginLink" href="login.html">로그인하러 가기</a>

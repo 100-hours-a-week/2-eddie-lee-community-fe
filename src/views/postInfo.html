@@ -13,11 +13,38 @@
     </head>
     <body>
         <section class="wrap">
+            <!--모달-->
+            <div class="modal" id="postModal"></div>
+            <div class="modalBox" id="postModalBox">
+                <p class="modalTitle">게시글을 삭제하시겠습니까?</p>
+                <p class="modalContent">삭제한 내용은 복구 할 수 없습니다.</p>
+                <div class="modalBtnBox">
+                    <button class="modalCancelBtn" id="postModalCancel">
+                        취소
+                    </button>
+                    <button class="modalOkBtn" id="postModalOk">확인</button>
+                </div>
+            </div>
+            <div class="modal" id="commentModal"></div>
+            <div class="modalBox" id="commentModalBox">
+                <p class="modalTitle">게시글을 삭제하시겠습니까?</p>
+                <p class="modalContent">삭제한 내용은 복구 할 수 없습니다.</p>
+                <div class="modalBtnBox">
+                    <button class="modalCancelBtn" id="commentModalCancel">
+                        취소
+                    </button>
+                    <button class="modalOkBtn" id="commentModalOk">확인</button>
+                </div>
+            </div>
             <header role="banner" class="banner">
-                <button
-                    class="loginBtn"
-                    onclick="location.href='login.html'"
-                ></button>
+                <div class="goToLoginBox">
+                    <a href="http://localhost:3000/user/login">
+                        <img
+                            class="goToLoginImg"
+                            src="/public/images/back_arrow.png"
+                        />
+                    </a>
+                </div>
                 <h1 class="title">아무 말 대잔치</h1>
                 <div class="usrProfileBox" id="usrProfileBox">
                     <img
@@ -53,10 +80,10 @@
                     </div>
                     <p class="time">2021-01-01 00:00:00</p>
                     <div class="modifyAndDeleteBtnBox">
-                        <button class="modifyAndDeleteBtn" id="modifiy">
+                        <button class="modifyAndDeleteBtn" id="postModify">
                             수정
                         </button>
-                        <button class="modifyAndDeleteBtn" id="delete">
+                        <button class="modifyAndDeleteBtn" id="postDelete">
                             삭제
                         </button>
                     </div>
@@ -117,10 +144,16 @@
                         <p class="editorNickname">작성자 1</p>
                         <p class="time">2024-01-01 00:00:00</p>
                         <div class="modifyAndDeleteBtnBox">
-                            <button class="modifyAndDeleteBtn" id="modifiy">
+                            <button
+                                class="modifyAndDeleteBtn"
+                                id="commentModifiy"
+                            >
                                 수정
                             </button>
-                            <button class="modifyAndDeleteBtn" id="delete">
+                            <button
+                                class="modifyAndDeleteBtn"
+                                id="commentDelete"
+                            >
                                 삭제
                             </button>
                         </div>
@@ -129,5 +162,6 @@
                 </div>
             </article>
         </section>
+        <script type="module" src="/public/js/postInfo.js"></script>
     </body>
 </html>
