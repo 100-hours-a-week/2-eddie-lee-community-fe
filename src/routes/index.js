@@ -9,8 +9,14 @@ let router = express.Router();
 router.get('/post', viewControllers.viewPostPage);
 router.get('/user/signup', viewControllers.viewSignupPage);
 router.get('/post/create_post', viewControllers.viewCreatePost);
-router.post('/user/signup', upload.none(), userController.signup);
+router.post(
+    '/user/signup',
+    upload.single('profilePhoto'),
+    userController.signup,
+);
 router.get('/post/modify_post', viewControllers.viewModifyPost);
+router.get('/post/post_info', viewControllers.viewPostInfo);
+router.get('/account/modify_user_info', viewControllers.viewModifyUserInfo);
 //router.post('/user/signup', userController.signup);
 
 export default router;

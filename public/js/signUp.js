@@ -144,19 +144,17 @@ profilePhoto.onchange = function (event) {
     }
 };
 
-signupBtn.submit = function (event) {
+signupForm.onsubmit = function (event) {
     event.preventDefault();
 
     const formData = new FormData(signupForm);
 
-    fetch('/signup', {
+    fetch('/user/signup', {
         method: 'POST',
         body: formData,
     })
         .then(response => response.json())
-        .then(data => {
-            data.inputEmail;
-        })
+        .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
 };
 loginBtn.onclick = function () {

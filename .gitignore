@@ -184,3 +184,7 @@ loadpath
 .recommenders
 
 node_modules
+
+userDummyData.json
+
+postDummyData.json

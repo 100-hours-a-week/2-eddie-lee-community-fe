@@ -22,13 +22,18 @@ body {
     margin: 0 auto 0;
 }
 
-.banner .loginBtn {
-    /* position: absolute; */
+.banner .goToLoginBox {
     width: 30px;
     height: 50px;
     justify-self: left;
-    background-image: url(images/KTB\ 줌\ 배경화면_yellow.png);
+    overflow: hidden;
     margin: 0;
+}
+
+.goToLoginBox .goToLoginImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .banner .title {
@@ -92,4 +97,75 @@ body {
 
 .dropdown a:hover {
     background-color: #e9e9e9;
+}
+
+.modal {
+    background-color: black;
+    opacity: 50%;
+    width: 100%;
+    height: 100%;
+    z-index: 90;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.modalBox {
+    background-color: white;
+    border-radius: 10px;
+    opacity: 100%;
+    width: 30%;
+    height: 15%;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    margin-left: 35%;
+    margin-top: 15%;
+    z-index: 99;
+    display: none;
+}
+
+.modalBox .modalTitle {
+    font-size: 24px;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10%;
+}
+
+.modalBox .modalContent {
+    font-size: 20px;
+    text-align: center;
+    color: black;
+    width: 100%;
+}
+
+.modalBox .modalBtnBox {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 15%;
+    margin-top: 5%;
+}
+
+.modalBtnBox .modalCancelBtn {
+    width: 40%;
+    border: none;
+    border-radius: 10px;
+    background-color: #242424;
+    color: white;
+    height: 100%;
+    font-size: 20px;
+}
+
+.modalBtnBox .modalOkBtn {
+    width: 40%;
+    border: none;
+    border-radius: 10px;
+    background-color: #c4a5fa;
+    color: black;
+    font-size: 20px;
 }

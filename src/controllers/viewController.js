@@ -18,3 +18,11 @@ export const viewCreatePost = async (req, res) => {
 export const viewModifyPost = async (req, res) => {
     res.sendFile(path.join(viewDirname, '/modifyPost.html'));
 };
+
+export const viewPostInfo = async (req, res) => {
+    res.sendFile(path.join(viewDirname, '/postInfo.html'));
+};
+
+export const viewModifyUserInfo = async (req, res) => {
+    res.sendFile(path.join(viewDirname, '/profileModify.html'));
+};
