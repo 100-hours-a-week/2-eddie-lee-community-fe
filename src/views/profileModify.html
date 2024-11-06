@@ -33,11 +33,23 @@
             </div>
             <header role="banner" class="banner">
                 <h1 class="title">아무 말 대잔치</h1>
-                <div class="usrProfileBox">
+                <div class="usrProfileBox" id="usrProfileBox">
                     <img
                         class="usrProfile"
+                        id="userProfile"
                         src="/public/images/profile_img.webp"
                     />
+                    <div class="dropdown" id="dropdown">
+                        <a href="http://localhost:3000/account/modify_user_info"
+                            >회원정보수정</a
+                        >
+                        <a href="http://localhost:3000/account/modify_passwd"
+                            >비밀번호수정</a
+                        >
+                        <a href="http://localhost:3000/account/logout"
+                            >로그아웃</a
+                        >
+                    </div>
                 </div>
             </header>
             <hr class="horizontal-rule" />
@@ -48,11 +60,13 @@
                 >
                 <label for="modifyProfilePhoto" class="inputPhoto">
                     <div class="profileSelectBox">
+                        <div class="profileChangeFilter"></div>
                         <img
                             class="profileSelect"
                             id="profileImg"
                             src="/public/images/profile_img.webp"
                         />
+                        <p class="profileImgChangeBtn">변경</p>
                     </div>
                     <input
                         type="file"
