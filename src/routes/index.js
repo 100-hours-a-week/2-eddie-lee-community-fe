@@ -14,9 +14,9 @@ router.post(
     upload.single('profilePhoto'),
     userController.signup,
 );
-router.get('/post/modify_post', viewControllers.viewModifyPost);
-router.get('/post/post_info', viewControllers.viewPostInfo);
-router.get('/account/modify_user_info', viewControllers.viewModifyUserInfo);
+router.get('/post/modify-post', viewControllers.viewModifyPost);
+router.get('/post/post-info', viewControllers.viewPostInfo);
+router.get('/account/modify-user-info', viewControllers.viewModifyUserInfo);
 //router.post('/user/signup', userController.signup);
 
 export default router;
