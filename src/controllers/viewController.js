@@ -7,10 +7,6 @@ export const viewPostPage = async (req, res) => {
     res.sendFile(path.join(viewDirname, '/Posts.html'));
 };
 
-export const viewSignupPage = async (req, res) => {
-    res.sendFile(path.join(viewDirname, '/signUp.html'));
-};
-
 export const viewCreatePost = async (req, res) => {
     res.sendFile(path.join(viewDirname, '/createPost.html'));
 };

@@ -19,3 +19,7 @@ export const signup = async (req, res) => {
         received_file: fileData ? fileData : 'No file uploaded',
     });
 };
+
+export const viewSignupPage = async (req, res) => {
+    res.sendFile(path.join(viewDirname, '/signUp.html'));
+};

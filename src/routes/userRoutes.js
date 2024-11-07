@@ -1,10 +1,15 @@
 import express from 'express';
 import * as userController from '../controllers/userController.js';
-import * as viewControllers from '../controllers/viewController.js';
+import multer from 'multer';
+const upload = multer();
 
 let userRouter = express.Router();
 
-userRouter.post('/user/signup', userController.signup);
-userRouter.get('/user/signup', viewControllers.viewSignupPage);
+userRouter.post(
+    '/signup',
+    upload.single('profilePhoto'),
+    userController.signup,
+);
+userRouter.get('/signup', userController.viewSignupPage);
 
 export default userRouter;
