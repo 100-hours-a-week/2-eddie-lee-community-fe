@@ -4,6 +4,7 @@ let inputContent = document.getElementById('inputContent');
 let userProfile = document.getElementById('userProfile');
 let usrProfileBox = document.getElementById('usrProfileBox');
 let dropdown = document.getElementById('dropdown');
+let postForm = document.getElementById('postForm');
 
 const postValid = function () {
     if (inputTitle.value.length !== 0 && inputContent.value.length !== 0) {
@@ -42,4 +43,25 @@ usrProfileBox.onclick = function () {
     } else {
         dropdown.style.display = 'none';
     }
+};
+
+postForm.onsubmit = () => {
+    let formData = new FormData();
+    history.pushState(null, '', '/posts');
+
+    fetch('http://localhost:3000/posts/edit', {
+        method: 'POST',
+        body: formData,
+    })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            fetch('http://localhost:3000/posts')
+                .then(res => res.text())
+                .then(html => {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                });
+        });
 };
