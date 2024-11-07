@@ -7,6 +7,7 @@ let inputEmail = document.getElementById('inputEmail');
 let inputPasswd = document.getElementById('inputPasswd');
 let validPasswd = document.getElementById('validPasswd');
 let loginBtn = document.getElementById('loginBtn');
+let loginForm = document.getElementById('loginForm');
 
 let checkValid = function (inputEmail, inputPasswd) {
     if (
@@ -42,12 +43,27 @@ inputPasswd.onkeyup = function () {
     checkValid(inputEmail, inputPasswd);
 };
 
-loginBtn.onclick = function () {
-    location.href = 'http://localhost:3000/post';
-    // fetch('http://localhost:3000/post')
-    //     .then(response => response.text())
-    //     .then(data => {
-    //         document.body.innerHTML = data;
-    //     })
-    //     .catch(error => console.error(error));
+loginForm.onsubmit = function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(loginForm);
+
+    fetch('/login', {
+        method: 'POST',
+        body: formData,
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            history.pushState(null, '', '/posts');
+
+            fetch('http://localhost:3000/posts')
+                .then(res => res.text())
+                .then(html => {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                });
+        })
+        .catch(error => console.error('Error:', error));
 };

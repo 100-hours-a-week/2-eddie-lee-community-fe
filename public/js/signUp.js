@@ -149,7 +149,7 @@ signupForm.onsubmit = function (event) {
 
     const formData = new FormData(signupForm);
 
-    fetch('/user/signup', {
+    fetch('/signup', {
         method: 'POST',
         body: formData,
     })

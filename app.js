@@ -2,19 +2,16 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import { expressCspHeader, NONCE } from 'express-csp-header';
 import router from './src/routes/index.js';
+import bodyParser from 'body-parser';
 
 const app = express();
 const port = 3000;
 const dirName = fileURLToPath(new URL('.', import.meta.url));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', router);
 
 app.use(express.static(`${dirName}`));
-
-app.get('/', (req, res) => {
-    res.sendFile(`${dirName}/src/views/login.html`);
-});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

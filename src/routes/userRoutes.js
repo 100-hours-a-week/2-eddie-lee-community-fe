@@ -5,11 +5,15 @@ const upload = multer();
 
 let userRouter = express.Router();
 
-userRouter.post(
-    '/signup',
-    upload.single('profilePhoto'),
-    userController.signup,
-);
-userRouter.get('/signup', userController.viewSignupPage);
+//GET
+userRouter.get('/:userId/user', userController.viewUserInfo);
+userRouter.get('/:userId/passwd', userController.viewUserPasswd);
+
+//PATCH
+userRouter.patch('/:userId/info', userController.modifyUserInfo);
+userRouter.patch('/:userId/passwd', userController.modifyUserPasswd);
+
+//DELETE
+userRouter.delete('/:userId/user', userController.deleteUser);
 
 export default userRouter;

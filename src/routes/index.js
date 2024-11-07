@@ -1,19 +1,27 @@
 import express from 'express';
-import * as viewControllers from '../controllers/viewController.js';
-import * as userController from '../controllers/userController.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import * as guestController from '../controllers/guestController.js';
 import multer from 'multer';
 import userRouter from './userRoutes.js';
+import postRouter from './postRoutes.js';
+
 const upload = multer();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+export const viewDirname = path.join(__dirname, '../views');
 
 let router = express.Router();
 
-router.use('/user', userRouter);
+router.use('/users', userRouter);
+router.use('/posts', postRouter);
 
-router.get('/post', viewControllers.viewPostPage);
+//GET
+router.get('/', guestController.viewLogin);
+router.get('/signup', guestController.viewSignup);
 
-router.get('/post/create-post', viewControllers.viewCreatePost);
-router.get('/post/modify-post', viewControllers.viewModifyPost);
-router.get('/post/post-info', viewControllers.viewPostInfo);
-router.get('/account/modify-user-info', viewControllers.viewModifyUserInfo);
+//POST
+router.post('/login', upload.none(), guestController.login);
+router.post('/signup', upload.single('profilePhoto'), guestController.signup);
 
 export default router;

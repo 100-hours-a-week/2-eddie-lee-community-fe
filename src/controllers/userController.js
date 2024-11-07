@@ -1,25 +1,16 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import queryString from 'querystring';
-import url from 'url';
+import { viewDirname } from '../routes/index.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const viewDirname = path.join(__dirname, '../views');
-
-export const signup = async (req, res) => {
-    const textData = req.body;
-    const fileData = req.file; // 파일이 없으면 undefined가 됩니다.
-
-    console.log('텍스트 데이터:', textData);
-    console.log('파일 데이터:', fileData);
-
-    res.json({
-        status: 'success',
-        received_data: textData,
-        received_file: fileData ? fileData : 'No file uploaded',
-    });
+//GET
+export const viewUserInfo = async (req, res) => {
+    res.sendFile(`${viewDirname}/profileModify.html`);
+};
+export const viewUserPasswd = async (req, res) => {
+    res.sendFile(`${viewDirname}/passwdModify.html`);
 };
 
-export const viewSignupPage = async (req, res) => {
-    res.sendFile(path.join(viewDirname, '/signUp.html'));
-};
+//PATCH
+export const modifyUserInfo = async (req, res) => {};
+export const modifyUserPasswd = async (req, res) => {};
+
+//DELETE
+export const deleteUser = async (req, res) => {};
