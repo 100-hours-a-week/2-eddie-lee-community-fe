@@ -188,3 +188,7 @@ node_modules
 userDummyData.json
 
 postDummyData.json
+
+commentDummyData.json
+
+dummyMaker.js
