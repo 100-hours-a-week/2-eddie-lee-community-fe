@@ -11,3 +11,7 @@ export const viewCreatePost = async (req, res) => {
 export const viewPostInfo = async (req, res) => {
     res.sendFile(`${viewDirname}/postInfo.html`);
 };
+
+export const viewModifyPost = async (req, res) => {
+    res.sendFile(`${viewDirname}/modifyPost.html`);
+};
