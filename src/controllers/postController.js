@@ -7,3 +7,7 @@ export const viewPostPage = async (req, res) => {
 export const viewCreatePost = async (req, res) => {
     res.sendFile(`${viewDirname}/createPost.html`);
 };
+
+export const viewPostInfo = async (req, res) => {
+    res.sendFile(`${viewDirname}/postInfo.html`);
+};
