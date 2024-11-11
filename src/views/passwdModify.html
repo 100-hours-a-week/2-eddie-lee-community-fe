@@ -22,43 +22,71 @@
                         src="/public/images/profile_img.webp"
                     />
                     <div class="dropdown" id="dropdown">
-                        <a href="http://localhost:3000/account/modify_user_info"
+                        <a href="http://localhost:3000/users/:userId/user"
                             >회원정보수정</a
                         >
-                        <a href="http://localhost:3000/account/modify_passwd"
+                        <a href="http://localhost:3000/users/:/userId/passwd"
                             >비밀번호수정</a
                         >
-                        <a href="http://localhost:3000/account/logout"
-                            >로그아웃</a
-                        >
+                        <a href="http://localhost:3000/">로그아웃</a>
                     </div>
                 </div>
             </header>
             <hr class="horizontal-rule" />
             <article class="passwdModifyArticle">
                 <h1 class="passwdModifyTitle">비밀번호 수정</h1>
-                <label class="passwdModifyLabel" for="inputPasswd"
-                    >비밀번호</label
-                >
-                <input
-                    type="password"
-                    class="getPasswd"
-                    id="inputPasswd"
-                    placeholder="현재닉네임"
-                />
-                <div class="helperText">*helperText</div>
-                <label class="passwdModifyLabel" for="inputRecheckPasswd"
-                    >비밀번호를 입력하세요</label
-                >
-                <input
-                    type="passwd"
-                    class="getPasswd"
-                    id="'inputRecheckPasswd"
-                    placeholder="비밀번호를 한번 더 입력하세요"
-                />
-                <div class="helperText">*helperText</div>
-                <button class="modifyBtn" type="button">수정하기</button>
+                <form id="passwdModifyForm">
+                    <label class="passwdModifyLabel" for="inputPasswd"
+                        >비밀번호</label
+                    >
+                    <input
+                        type="password"
+                        class="getPasswd"
+                        id="inputPasswd"
+                        placeholder="비밀번호를 입력하세요"
+                    />
+                    <div class="helperText" id="inputPasswdHelperText">
+                        *비밀번호를 입력해주세요
+                    </div>
+                    <div
+                        class="helperText hide"
+                        id="inputPasswdInvalidHelperText"
+                    >
+                        *비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자,
+                        숫자, 특수문자를 각각 최소 1개 포함해야 합니다.
+                    </div>
+                    <div class="helperText hide" id="passwdDifferent">
+                        *비밀번호 확인과 다릅니다.
+                    </div>
+                    <label class="passwdModifyLabel" for="inputRecheckPasswd"
+                        >비밀번호를 입력하세요</label
+                    >
+                    <input
+                        type="password"
+                        class="getPasswd"
+                        id="inputRecheckPasswd"
+                        placeholder="비밀번호를 한번 더 입력하세요"
+                    />
+                    <div class="helperText" id="inputCheckHelperText">
+                        *비밀번호를 한번 더 입력해주세요
+                    </div>
+                    <div class="helperText hide" id="inputCheckDifferent">
+                        *비밀번호와 다릅니다.
+                    </div>
+                    <button
+                        class="modifyBtn"
+                        type="submit"
+                        id="modifyBtn"
+                        disabled
+                    >
+                        수정하기
+                    </button>
+                </form>
             </article>
+            <div id="toast" class="toast">
+                <p>수정완료</p>
+            </div>
         </section>
+        <script src="/public/js/passwdModify.js"></script>
     </body>
 </html>
