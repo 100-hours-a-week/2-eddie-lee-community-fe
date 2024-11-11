@@ -5,6 +5,27 @@ let deleteProfileCancelBtn = document.getElementById('deleteProfileCancelBtn');
 let deleteProfileOkBtn = document.getElementById('deleteProfileOkBtn');
 let deleteProfileModal = document.getElementById('deleteProfileModal');
 let deleteProfileModalBox = document.getElementById('deleteProfileModalBox');
+let dropdown = document.getElementById('dropdown');
+let usrProfileBox = document.getElementById('usrProfileBox');
+let inputNickname = document.getElementById('inputNickName');
+let noInputNickname = document.getElementById('noInputNickname');
+let includeSpaceNickname = document.getElementById('includeSpaceNickname');
+let dupNickname = document.getElementById('dupNickname');
+let tooLongNickname = document.getElementById('tooLongNickname');
+
+const nicknamePattern = /^\S{1,10}$/;
+
+let nicknameValid = function (nickname) {
+    return nicknamePattern.test(inputNickname.value);
+};
+
+let addHide = function (elementID) {
+    elementID.classList.add('hide');
+};
+
+let removeHide = function (elementID) {
+    elementID.classList.remove('hide');
+};
 
 const disableToast = function () {
     toast.style.display = 'none';
@@ -36,5 +57,30 @@ usrProfileBox.onclick = function () {
         dropdown.style.flexDirection = 'column';
     } else {
         dropdown.style.display = 'none';
+    }
+};
+
+inputNickname.onkeyup = function () {
+    if (inputNickname.value.length === 0) {
+        removeHide(noInputNickname);
+        addHide(includeSpaceNickname);
+        addHide(dupNickname);
+        addHide(tooLongNickname);
+    }
+    if (inputNickname.value.length > 10) {
+        removeHide(tooLongNickname);
+        addHide(noInputNickname);
+        addHide(dupNickname);
+        addHide(includeSpaceNickname);
+    } else if (!nicknameValid(inputNickname)) {
+        removeHide(includeSpaceNickname);
+        addHide(noInputNickname);
+        addHide(dupNickname);
+        addHide(tooLongNickname);
+    } else {
+        addHide(tooLongNickname);
+        addHide(noInputNickname);
+        addHide(dupNickname);
+        addHide(includeSpaceNickname);
     }
 };
