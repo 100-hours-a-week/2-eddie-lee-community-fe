@@ -24,7 +24,7 @@
                         <a href="http://localhost:3000/users/:userId/passwd"
                             >비밀번호수정</a
                         >
-                        <a href="http://localhost:3000/">로그아웃</a>
+                        <a href="http://localhost:3000/auth/login">로그아웃</a>
                     </div>
                 </div>
             </header>
@@ -41,9 +41,9 @@
                         게시글 작성
                     </button>
                 </div>
-                <article class="postContentArea">
-                    <div class="postContentDiv" id="1">
-                        <h3 class="postTitle">제목 1</h3>
+                <article class="postContentArea" id="postContentArea">
+                    <!-- <div class="postContentDiv" id="1">
+                        <h3 class="postTitle" id="postTitle">제목 1</h3>
                         <div class="listAndTime">
                             <ul class="socialList">
                                 <li class="socialListTxt" id="like">
@@ -67,9 +67,11 @@
                                     src="/public/images/profile_img.webp"
                                 />
                             </div>
-                            <p class="editorNickname">작성자 1</p>
+                            <p class="editorNickname" id="editorNickname">
+                                작성자 1
+                            </p>
                         </div>
-                    </div>
+                    </div> -->
                 </article>
             </article>
         </section>

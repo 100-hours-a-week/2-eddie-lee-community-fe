@@ -48,7 +48,7 @@ loginForm.onsubmit = function (event) {
 
     const formData = new FormData(loginForm);
 
-    fetch('/login', {
+    fetch('/auth/login', {
         method: 'POST',
         body: formData,
     })
