@@ -7,6 +7,7 @@ import authRouter from './authRoutes.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const viewDirname = path.join(__dirname, '../views');
+export const rootDirname = path.join(__dirname, '../../');
 
 let router = express.Router();
 

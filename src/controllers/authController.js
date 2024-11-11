@@ -1,4 +1,4 @@
-import { viewDirname } from '../routes/index.js';
+import { viewDirname, rootDirname } from '../routes/index.js';
 import fs from 'fs';
 import multer from 'multer';
 const upload = multer();
@@ -23,7 +23,6 @@ export const login = async (req, res) => {
         .then(userData => {
             userData.forEach(data => {
                 if (data.email === email && data.passwd === passwd) {
-                    //console.log(`${data.email} ==== ${email}`);
                     loginFlag = true;
                     console.log(loginFlag);
                 }
@@ -48,12 +47,27 @@ export const signup = async (req, res) => {
     const textData = req.body;
     const fileData = req.file; // 파일이 없으면 undefined가 됩니다.
 
-    console.log('텍스트 데이터:', textData);
-    console.log('파일 데이터:', fileData);
-
-    res.json({
-        status: 'success',
-        received_data: textData,
-        received_file: fileData ? fileData : 'No file uploaded',
-    });
+    const addUserData = {
+        user_id: Date.now(),
+        profile_img: fileData,
+        email: textData.email,
+        passwd: textData.passwd,
+        nickname: textData.nickname,
+    };
+    const originData = await fetch(
+        'http://localhost:3000/public/dummyData/userDummyData.json',
+    )
+        .then(res => res.json())
+        .catch(error => console.error(`데이터 가져오기 실패: ${error}`));
+    originData.push(addUserData);
+    console.log(originData);
+    try {
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/userDummyData.json`,
+            JSON.stringify(originData, null, 2),
+        );
+        res.status(200).send('데이터 추가 완료');
+    } catch (error) {
+        res.status(500).send('데이터 추가 실패');
+    }
 };

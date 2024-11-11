@@ -48,6 +48,10 @@ loginForm.onsubmit = function (event) {
 
     const formData = new FormData(loginForm);
 
+    let originPasswd = formData.get('passwd');
+    formData.set('passwd', btoa(originPasswd));
+
+    console.log(formData.get('passwd'));
     fetch('/auth/login', {
         method: 'POST',
         body: formData,
@@ -56,15 +60,7 @@ loginForm.onsubmit = function (event) {
         .then(data => {
             console.log(data.message);
             if (data.login_result) {
-                history.pushState(null, '', '/posts');
-
-                fetch('http://localhost:3000/posts')
-                    .then(res => res.text())
-                    .then(html => {
-                        document.open();
-                        document.write(html);
-                        document.close();
-                    });
+                window.location.href = 'http://localhost:3000/posts';
             }
         })
         .catch(error => console.error('Error:', error));

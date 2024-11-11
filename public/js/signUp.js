@@ -48,8 +48,34 @@ let removeHide = function (elementID) {
     elementID.classList.remove('hide');
 };
 
+//중복 체크
+
+const isDuplicate = async (inputData, dataType) => {
+    let result = false;
+    await fetch('http://localhost:3000/public/dummyData/userDummyData.json')
+        .then(res => res.json())
+        .then(userData => {
+            userData.forEach(user => {
+                switch (dataType) {
+                    case 'email':
+                        if (inputData === user.email) {
+                            result = true;
+                        }
+                        break;
+                    case 'nickname':
+                        if (inputData === user.nickname) {
+                            result = true;
+                        }
+                        break;
+                }
+            });
+        })
+        .catch(error => console.error('데이터 가져오기 실패: ' + error));
+    return result;
+};
+
 //유효성 체크
-inputEmail.onkeyup = function () {
+inputEmail.onkeyup = async () => {
     if (inputEmail.value.length === 0) {
         addHide(invalidEmail);
         addHide(dupEmail);
@@ -58,12 +84,14 @@ inputEmail.onkeyup = function () {
         addHide(noInputEmail);
         addHide(dupEmail);
         removeHide(invalidEmail);
-    }
-    if (emailValid(inputEmail)) {
+    } else if (await isDuplicate(inputEmail.value, 'email')) {
+        addHide(noInputEmail);
+        removeHide(dupEmail);
+        addHide(invalidEmail);
+    } else {
         addHide(noInputEmail);
         addHide(dupEmail);
         addHide(invalidEmail);
-        signUpValid(inputEmail, inputPasswd, inputNickname);
     }
 };
 
@@ -95,29 +123,37 @@ recheckPasswd.onkeyup = function () {
     }
 };
 
-inputNickname.onkeyup = function () {
+inputNickname.onkeyup = async () => {
     if (inputNickname.value.length === 0) {
         removeHide(noInputNickname);
         addHide(includeSpaceNickname);
         addHide(dupNickname);
         addHide(tooLongNickname);
-    }
-    if (inputNickname.value.length > 10) {
-        removeHide(tooLongNickname);
-        addHide(noInputNickname);
-        addHide(dupNickname);
-        addHide(includeSpaceNickname);
-    } else if (!nicknameValid(inputNickname)) {
+    } else if (
+        !nicknameValid(inputNickname) &&
+        inputNickname.value.length < 10
+    ) {
         removeHide(includeSpaceNickname);
         addHide(noInputNickname);
         addHide(dupNickname);
         addHide(tooLongNickname);
+    } else if (inputNickname.value.length > 10) {
+        removeHide(tooLongNickname);
+        addHide(noInputNickname);
+        addHide(dupNickname);
+        addHide(includeSpaceNickname);
+    } else if (await isDuplicate(inputNickname.value, 'nickname')) {
+        addHide(tooLongNickname);
+        addHide(noInputNickname);
+        removeHide(dupNickname);
+        addHide(includeSpaceNickname);
     } else {
         addHide(tooLongNickname);
         addHide(noInputNickname);
         addHide(dupNickname);
         addHide(includeSpaceNickname);
     }
+    isDuplicate(inputNickname.value, 'nickname');
 };
 
 inputNickname.onblur = function () {
@@ -144,19 +180,24 @@ profilePhoto.onchange = function (event) {
     }
 };
 
-signupForm.onsubmit = function (event) {
+signupForm.onsubmit = async event => {
     event.preventDefault();
 
     const formData = new FormData(signupForm);
+    let originPasswd = formData.get('passwd');
+    formData.set('passwd', btoa(originPasswd));
 
-    fetch('/signup', {
+    await fetch('/auth/signup', {
         method: 'POST',
         body: formData,
     })
-        .then(response => response.json())
+        .then(res => res.text())
         .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
+
+    window.location.href = 'http://localhost:3000/auth/login';
 };
-loginBtn.onclick = function () {
-    location.href = 'http://localhost:3000/';
+
+loginBtn.onclick = () => {
+    location.href = 'http://localhost:3000/auth/login';
 };
