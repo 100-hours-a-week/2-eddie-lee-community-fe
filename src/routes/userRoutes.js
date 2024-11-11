@@ -8,7 +8,7 @@ let userRouter = express.Router();
 //GET
 userRouter.get('/:userId/user', userController.viewUserInfo);
 userRouter.get('/:userId/passwd', userController.viewUserPasswd);
-userRouter.get('/users/1/user', userController.viewModifyUser);
+userRouter.get('/:userId/user', userController.viewModifyUser);
 
 //PATCH
 userRouter.patch('/:userId/info', userController.modifyUserInfo);

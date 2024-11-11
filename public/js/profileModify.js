@@ -7,7 +7,7 @@ let deleteProfileModal = document.getElementById('deleteProfileModal');
 let deleteProfileModalBox = document.getElementById('deleteProfileModalBox');
 let dropdown = document.getElementById('dropdown');
 let usrProfileBox = document.getElementById('usrProfileBox');
-let inputNickname = document.getElementById('inputNickName');
+let inputNickname = document.getElementById('inputNickname');
 let noInputNickname = document.getElementById('noInputNickname');
 let includeSpaceNickname = document.getElementById('includeSpaceNickname');
 let dupNickname = document.getElementById('dupNickname');
@@ -38,36 +38,13 @@ const createToast = function () {
 };
 
 modifyBtn.onclick = async (req, res) => {
-    await createToast();
-};
-
-deleteProfile.onclick = function () {
-    deleteProfileModal.style.display = 'flex';
-    deleteProfileModalBox.style.display = 'flex';
-};
-
-deleteProfileCancelBtn.onclick = function () {
-    deleteProfileModal.style.display = 'none';
-    deleteProfileModalBox.style.display = 'none';
-};
-
-usrProfileBox.onclick = function () {
-    if (dropdown.style.display == 'none') {
-        dropdown.style.display = 'flex';
-        dropdown.style.flexDirection = 'column';
-    } else {
-        dropdown.style.display = 'none';
-    }
-};
-
-inputNickname.onkeyup = function () {
+    console.log(inputNickname.value);
     if (inputNickname.value.length === 0) {
         removeHide(noInputNickname);
         addHide(includeSpaceNickname);
         addHide(dupNickname);
         addHide(tooLongNickname);
-    }
-    if (inputNickname.value.length > 10) {
+    } else if (inputNickname.value.length > 10) {
         removeHide(tooLongNickname);
         addHide(noInputNickname);
         addHide(dupNickname);
@@ -82,5 +59,29 @@ inputNickname.onkeyup = function () {
         addHide(noInputNickname);
         addHide(dupNickname);
         addHide(includeSpaceNickname);
+        createToast();
+    }
+};
+
+deleteProfile.onclick = function () {
+    deleteProfileModal.style.display = 'flex';
+    deleteProfileModalBox.style.display = 'flex';
+};
+
+deleteProfileCancelBtn.onclick = function () {
+    deleteProfileModal.style.display = 'none';
+    deleteProfileModalBox.style.display = 'none';
+};
+
+deleteProfileOkBtn.onclick = () => {
+    location.href = 'http://localhost:3000/';
+};
+
+usrProfileBox.onclick = function () {
+    if (dropdown.style.display == 'none') {
+        dropdown.style.display = 'flex';
+        dropdown.style.flexDirection = 'column';
+    } else {
+        dropdown.style.display = 'none';
     }
 };
