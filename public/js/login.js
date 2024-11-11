@@ -54,16 +54,18 @@ loginForm.onsubmit = function (event) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            history.pushState(null, '', '/posts');
+            console.log(data.message);
+            if (data.login_result) {
+                history.pushState(null, '', '/posts');
 
-            fetch('http://localhost:3000/posts')
-                .then(res => res.text())
-                .then(html => {
-                    document.open();
-                    document.write(html);
-                    document.close();
-                });
+                fetch('http://localhost:3000/posts')
+                    .then(res => res.text())
+                    .then(html => {
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    });
+            }
         })
         .catch(error => console.error('Error:', error));
 };

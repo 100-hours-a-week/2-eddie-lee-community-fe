@@ -185,6 +185,11 @@ loadpath
 
 node_modules
 
+
+# dummyData
+
+/public/dummyData
+
 userDummyData.json
 
 postDummyData.json
