@@ -13,6 +13,10 @@ app.use('/', router);
 
 app.use(express.static(`${dirName}`));
 
+app.get('/', (req, res) => {
+    res.redirect(301, '/auth/login');
+});
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });

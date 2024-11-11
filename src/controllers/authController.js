@@ -1,4 +1,6 @@
 import { viewDirname } from '../routes/index.js';
+import multer from 'multer';
+const upload = multer();
 
 //GET
 export const viewLogin = async (req, res) => {

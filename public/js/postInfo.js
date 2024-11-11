@@ -14,7 +14,25 @@ let commentModalOk = document.getElementById('commentModalOk');
 let commentArea = document.getElementById('commentArea');
 let addCommentBtn = document.getElementById('addCommentBtn');
 let likeBtn = document.getElementById('likeBtn');
-let likeNumber = document.getElementById('likeNumber');
+let likeCount = document.getElementById('likeCount');
+let viewCount = document.getElementById('viewCount');
+let commentCount = document.getElementById('commentCount');
+
+document.addEventListener('DOMContentLoaded', () => {
+    let like = parseInt(likeCount.textContent);
+    let view = parseInt(viewCount.textContent);
+    let comment = parseInt(commentCount.textContent);
+
+    if (like > 999) {
+        likeCount.textContent = `${parseInt(like / 1000)}k`;
+    }
+    if (view > 999) {
+        viewCount.textContent = `${parseInt(view / 1000)}k`;
+    }
+    if (comment > 999) {
+        commentCount.textContent = `${parseInt(comment / 1000)}k`;
+    }
+});
 
 usrProfileBox.onclick = function () {
     if (dropdown.style.display == 'none') {
@@ -71,7 +89,10 @@ addCommentBtn.onclick = () => {
 };
 
 likeBtn.onclick = () => {
-    let like = parseInt(likeNumber.textContent);
-    console.log(likeNumber.textContent);
-    likeNumber.textContent = like + 1;
+    let like = parseInt(likeCount.textContent);
+    console.log(likeCount.textContent);
+    if (++like > 1000) {
+        like /= 1000;
+        likeCount.textContent = `${like}k`;
+    }
 };
