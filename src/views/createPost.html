@@ -49,11 +49,12 @@
             </div>
             <form class="postForm" id="postForm">
                 <article class="createPost">
-                    <label for="inputEmail" class="inputLabel">제목*</label>
+                    <label for="inputTitle" class="inputLabel">제목*</label>
                     <input
                         id="inputTitle"
                         type="text"
                         class="postTitle"
+                        name="title"
                         placeholder="제목을 입력해주세요.(최대 26글자)"
                         maxlength="26"
                     />
@@ -62,11 +63,17 @@
                         id="inputContent"
                         class="postContent"
                         type="textbox"
+                        name="content"
                         placeholder="내용을 입력해주세요."
                         rows="14"
                     ></textarea>
                     <label for="imputImg" class="inputLabel">이미지</label>
-                    <input type="file" id="inputImg" accept="image/*" />
+                    <input
+                        type="file"
+                        id="inputImg"
+                        accept="image/*"
+                        name="image"
+                    />
                     <button type="submit" id="submitBtn" class="submitPost">
                         완료
                     </button>

@@ -13,6 +13,7 @@ postRouter.get('/:postId', postController.viewModifyPost);
 //POST
 
 postRouter.post('/', postController.getPostList);
+postRouter.post('/edit', upload.single('image'), postController.editPost);
 
 //PATCH
 postRouter.patch(

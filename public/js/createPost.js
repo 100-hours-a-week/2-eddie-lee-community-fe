@@ -45,23 +45,18 @@ usrProfileBox.onclick = function () {
     }
 };
 
-postForm.onsubmit = () => {
-    let formData = new FormData();
-    history.pushState(null, '', '/posts');
+postForm.onsubmit = event => {
+    event.preventDefault();
+    let formData = new FormData(postForm);
 
     fetch('http://localhost:3000/posts/edit', {
         method: 'POST',
         body: formData,
     })
-        .then(res => res.json())
+        .then(res => res.text())
         .then(data => {
             console.log(data);
-            fetch('http://localhost:3000/posts')
-                .then(res => res.text())
-                .then(html => {
-                    document.open();
-                    document.write(html);
-                    document.close();
-                });
         });
+
+    location.href = 'http://localhost:3000/posts';
 };
