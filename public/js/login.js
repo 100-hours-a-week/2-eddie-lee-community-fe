@@ -50,17 +50,19 @@ loginForm.onsubmit = function (event) {
 
     let originPasswd = formData.get('passwd');
     formData.set('passwd', btoa(originPasswd));
-
     fetch('/auth/login', {
         method: 'POST',
         body: formData,
     })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-            if (data.login_result) {
-                window.location.href = 'http://localhost:3000/posts';
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`${response.json().message}`);
             }
+            return response.json();
+        })
+        .then(result => {
+            console.log(result.message);
+            window.location.href = 'http://localhost:3000/posts';
         })
         .catch(error => console.error('Error:', error));
 };

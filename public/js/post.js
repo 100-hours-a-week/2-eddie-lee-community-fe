@@ -2,10 +2,31 @@ let usrProfileBox = document.getElementById('usrProfileBox');
 let dropdown = document.getElementById('dropdown');
 let createPostBtn = document.getElementById('createPostBtn');
 let postContentArea = document.getElementById('postContentArea');
+const userProfile = document.getElementById('userProfile');
 //게시글 목록의 요소를 담는 div태그
 let postContentDiv = document.getElementsByClassName('postContentDiv');
 
 let contentsCount = 0;
+let userId = 0;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetch('http://localhost:3000/users/data', {
+        method: 'GET',
+        credentials: 'include',
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('User data not exist');
+            }
+            return res.json();
+        })
+        .then(userData => {
+            const user = userData.user;
+            userProfile.src = user.userProfileImg;
+            userId = user.userId;
+        })
+        .catch(error => console.error(error));
+});
 
 //infinite scroll
 function getContents() {
@@ -70,18 +91,13 @@ function getContents() {
 
                 const profileImg = document.createElement('img');
                 profileImg.classList.add('profileImg');
-                if (postInfo.image === null || postInfo.image === undefined) {
-                    profileImg.src = '/public/images/profile_img.webp';
-                } else {
-                    profileImg.src = postInfo.image;
-                }
+                profileImg.src = postInfo.profile_img;
 
                 profileImgBox.appendChild(profileImg);
 
                 const editorNickname = document.createElement('p');
                 editorNickname.classList.add('editorNickname');
-                //예비
-                editorNickname.textContent = `작성자 ${contentsCount}`;
+                editorNickname.textContent = postInfo.nickname;
 
                 // editorDiv에 프로필 이미지와 작성자 닉네임 추가
                 editorDiv.appendChild(profileImgBox);

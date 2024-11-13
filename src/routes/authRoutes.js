@@ -1,8 +1,17 @@
 import express from 'express';
+import { viewDirname, rootDirname } from '../routes/index.js';
 import * as authController from '../controllers/authController.js';
 import multer from 'multer';
+const userProfileImg = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, `${rootDirname}/public/userPhotos`);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    },
+});
 
-let upload = multer();
+const upload = multer({ storage: userProfileImg });
 
 let authRouter = express.Router();
 

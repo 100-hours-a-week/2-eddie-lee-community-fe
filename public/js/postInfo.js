@@ -18,12 +18,15 @@ let likeCount = document.getElementById('likeCount');
 let viewCount = document.getElementById('viewCount');
 let commentCount = document.getElementById('commentCount');
 const postInfoArticle = document.getElementById('postInfoArticle');
-
 const profileImg = document.getElementById('profileImg');
 const editorNickname = document.getElementById('editorNickname');
 const timestamp = document.getElementById('timestamp');
 const postPhoto = document.getElementById('postPhoto');
 const postContent = document.getElementById('postContent');
+const userProfile = document.getElementById('userProfile');
+const modifyAndDeleteBtnBox = document.getElementById('modifyAndDeleteBtnBox');
+
+let userId = 0;
 
 const numericalPrefix = number => {
     if (number > 999) {
@@ -34,29 +37,51 @@ const numericalPrefix = number => {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+    //session에서 user data 받아오기
+    await fetch('http://localhost:3000/users/data', {
+        method: 'GET',
+        credentials: 'include',
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('User data not exist');
+            }
+            return res.json();
+        })
+        .then(userData => {
+            const user = userData.user;
+            userProfile.src = user.userProfileImg;
+            userId = user.userId;
+        })
+        .catch(error => console.error(error));
+
     const url = window.location.pathname;
     const postId = url.split('/')[2];
 
     const getData = await fetch(`http://localhost:3000/posts/${postId}/data`);
-
-    console.log(getData);
     const postData = await getData.json();
-    console.log(postData);
+    const getUserData = await fetch(
+        `http://localhost:3000/public/dummyData/userDummyData.json`,
+    )
+        .then(res => {
+            if (!res.ok) {
+                throw Error('get data error');
+            }
+            return res.json();
+        })
+        .then(users => {
+            const user = users.find(user => user.user_id === postData.user_id);
+            return user;
+        })
+        .catch(error => console.error(error));
     postTitle.textContent = postData.title;
-    if (postData.image === '') {
-        profileImg.src = '/public/images/profile_img.webp';
-    } else {
-        profileImg.src = postData.image;
-    }
-
-    //HACK
-    editorNickname.textContent = '작성자 1';
+    profileImg.src = postData.profile_img;
+    editorNickname.textContent = postData.nickname;
     timestamp.textContent = postData.timestamp;
-    if (postData.image === '') {
-        postPhoto.src = '/public/images/profile_img.webp';
-    } else {
-        postPhoto.src = postData.image;
-    }
+    if (userId !== postData.user_id)
+        modifyAndDeleteBtnBox.style.display = 'none';
+
+    postPhoto.src = postData.image;
     postContent.textContent = postData.content;
 
     let like = postData.like;
@@ -88,33 +113,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const profileImg = document.createElement('img');
         profileImg.classList.add('profileImg');
-        //HACK
-        profileImg.src = '/public/images/profile_img.webp';
+        profileImg.src = comment.profile_img;
 
         profileImgBox.appendChild(profileImg);
 
         const editorNickname = document.createElement('p');
         editorNickname.classList.add('editorNickname');
-        //HACK
-        editorNickname.textContent = '작성자 1';
+        editorNickname.textContent = comment.nickname;
 
         const time = document.createElement('p');
         time.classList.add('time');
         time.textContent = comment.timestamp;
+        if (comment.user_id === userId) {
+            const modifyAndDeleteBtnBox = document.createElement('div');
+            modifyAndDeleteBtnBox.classList.add('modifyAndDeleteBtnBox');
 
-        const modifyAndDeleteBtnBox = document.createElement('div');
-        modifyAndDeleteBtnBox.classList.add('modifyAndDeleteBtnBox');
+            const modifyBtn = document.createElement('button');
+            modifyBtn.classList.add('modifyAndDeleteBtn');
+            modifyBtn.textContent = '수정';
 
-        const modifyBtn = document.createElement('button');
-        modifyBtn.classList.add('modifyAndDeleteBtn');
-        modifyBtn.textContent = '수정';
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('modifyAndDeleteBtn');
+            deleteBtn.textContent = '삭제';
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.classList.add('modifyAndDeleteBtn');
-        deleteBtn.textContent = '삭제';
-
-        modifyAndDeleteBtnBox.appendChild(modifyBtn);
-        modifyAndDeleteBtnBox.appendChild(deleteBtn);
+            modifyAndDeleteBtnBox.appendChild(modifyBtn);
+            modifyAndDeleteBtnBox.appendChild(deleteBtn);
+        }
 
         commentEditorBox.appendChild(profileImgBox);
         commentEditorBox.appendChild(editorNickname);

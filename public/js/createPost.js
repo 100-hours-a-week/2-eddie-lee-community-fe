@@ -6,6 +6,35 @@ let usrProfileBox = document.getElementById('usrProfileBox');
 let dropdown = document.getElementById('dropdown');
 let postForm = document.getElementById('postForm');
 
+document.addEventListener('DOMContentLoaded', async () => {
+    let userId = 0;
+    await fetch('http://localhost:3000/users/data', {
+        method: 'GET',
+        credentials: 'include',
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('User data not exist');
+            }
+            return res.json();
+        })
+        .then(userData => {
+            const user = userData.user;
+            userProfile.src = user.userProfileImg;
+            userId = user.userId;
+
+            console.log(
+                `user Profile : ${user.userProfileImg}, userId: ${user.userId}`,
+            );
+        })
+        .catch(error => console.error(error));
+    const userIdInput = document.createElement('input');
+    userIdInput.type = 'hidden';
+    userIdInput.name = 'userId';
+    userIdInput.value = userId;
+    postForm.appendChild(userIdInput);
+});
+
 const postValid = function () {
     if (inputTitle.value.length !== 0 && inputContent.value.length !== 0) {
         return true;

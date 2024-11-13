@@ -1,10 +1,15 @@
 import { viewDirname, rootDirname } from '../routes/index.js';
 import fs from 'fs';
-import multer from 'multer';
-const upload = multer();
 
 //GET
 export const viewLogin = async (req, res) => {
+    // req.session.destroy(err => {
+    //     if (err) {
+    //         return res.status(500).send('Error destroying session');
+    //     }
+    //     res.clearCookie('connect.sid');
+    //     res.sendFile(`${viewDirname}/login.html`);
+    // });
     res.sendFile(`${viewDirname}/login.html`);
 };
 export const viewSignup = async (req, res) => {
@@ -16,36 +21,47 @@ export const login = async (req, res) => {
     const loginInfo = req.body;
     const email = loginInfo.email;
     const passwd = loginInfo.passwd;
-    let loginFlag = false;
 
-    await fetch(`http://localhost:3000/public/dummyData/userDummyData.json`)
+    const users = await fetch(
+        `http://localhost:3000/public/dummyData/userDummyData.json`,
+    )
         .then(res => res.json())
-        .then(userData => {
-            userData.forEach(data => {
-                if (data.email === email && data.passwd === passwd) {
-                    loginFlag = true;
-                    console.log(loginFlag);
-                }
-            });
-        })
         .catch(error => console.error(error));
 
-    if (loginFlag) {
-        res.status(200).json({
-            message: 'login_success',
-            login_result: loginFlag,
+    const user = users.find(
+        findUser => findUser.email === email && findUser.passwd === passwd,
+    );
+    if (!user) {
+        console.log('login failed');
+        res.status(404).json({
+            message: 'no user exist.',
+            login_result: 'failed',
         });
     } else {
-        res.status(401).json({
-            message: 'login_failed',
-            login_result: loginFlag,
+        console.log('login success');
+        req.session.user = {
+            userId: user.user_id,
+            userNickname: user.nickname,
+            userProfileImg: user.profile_img,
+            userEmail: user.email,
+        };
+        res.status(200).json({
+            message: 'Login success',
+            user: req.session.user,
         });
     }
 };
 
 export const signup = async (req, res) => {
     const textData = req.body;
-    const fileData = req.file; // 파일이 없으면 undefined가 됩니다.
+    let fileData = req.file; // 파일이 없으면 undefined가 됩니다
+
+    if (!fileData) {
+        fileData = '/public/images/profile_img.webp';
+    } else {
+        const filePath = `/public/userPhotos/${req.file.filename}`;
+        fileData = filePath;
+    }
 
     const addUserData = {
         user_id: Date.now(),

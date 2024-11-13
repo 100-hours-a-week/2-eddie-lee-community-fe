@@ -4,6 +4,20 @@ import fs from 'fs';
 const postFilePath =
     'http://localhost:3000/public/dummyData/postDummyData.json';
 
+//timestamp
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 //GET
 export const viewPostPage = async (req, res) => {
     res.sendFile(`${viewDirname}/Posts.html`);
@@ -78,23 +92,37 @@ export const getPostList = async (req, res) => {
 };
 
 export const editPost = async (req, res) => {
-    const fileData = req.file;
+    let fileData = req.file;
     const postData = req.body;
+    const time = Date.now();
+    const timestamp = formatTimestamp(time);
     if (!fileData) {
-        fileData = '';
+        fileData = '/public/images/KTB 줌 배경화면_yellow.png';
+    } else {
+        const filePath = `/public/userPhotos/${req.file.filename}`;
+        fileData = filePath;
     }
+
+    const getUserData = await fetch(
+        'http://localhost:3000/public/dummyData/userDummyData.json',
+    ).then(res => res.json());
+
+    const user = getUserData.find(
+        findUser => findUser.user_id == postData.userId,
+    );
+    console.log(getUserData);
     const postObj = {
-        //HACK
-        user_id: 1,
+        user_id: postData.user_id,
         post_id: Date.now(),
+        profile_img: user.profile_img,
+        nickname: user.nickname,
         title: postData.title,
         content: postData.content,
         image: fileData,
-        //HACK
-        timeStamp: '2024-11-11 11:11:11',
+        timestamp: timestamp,
         like: 0,
         view: 0,
-        countComment: 0,
+        comment_count: 0,
     };
     let originPostFile = await fetch(
         'http://localhost:3000/public/dummyData/postDummyData.json',
@@ -103,7 +131,6 @@ export const editPost = async (req, res) => {
         .catch(error => console.error(`데이터 가져오기 실패: ${error}`));
 
     originPostFile.push(postObj);
-    console.log(postObj);
     try {
         fs.writeFileSync(
             `${rootDirname}/public/dummyData/postDummyData.json`,

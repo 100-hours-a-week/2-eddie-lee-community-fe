@@ -1,7 +1,17 @@
 import express from 'express';
 import * as postController from '../controllers/postController.js';
+import { rootDirname } from '../routes/index.js';
 import multer from 'multer';
-const upload = multer();
+const userProfileImg = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, `${rootDirname}/public/userPhotos`);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    },
+});
+
+const upload = multer({ storage: userProfileImg });
 
 let postRouter = express.Router();
 //GET
@@ -15,7 +25,7 @@ postRouter.get('/:postId', postController.viewModifyPost);
 //POST
 
 postRouter.post('/', postController.getPostList);
-postRouter.post('/edit', upload.single('image'), postController.editPost);
+postRouter.post('/edit', upload.single('inputImg'), postController.editPost);
 
 //PATCH
 postRouter.patch(
