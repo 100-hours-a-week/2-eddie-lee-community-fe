@@ -83,6 +83,9 @@ export const getPostList = async (req, res) => {
         .then(res => res.json())
         .then(postList => {
             for (let i = 0; i < 10; i++) {
+                if (offset + i > postList.length) {
+                    return;
+                }
                 postArr.push(postList[offset + i]);
             }
         })
@@ -110,7 +113,6 @@ export const editPost = async (req, res) => {
     const user = getUserData.find(
         findUser => findUser.user_id == postData.userId,
     );
-    console.log(getUserData);
     const postObj = {
         user_id: postData.user_id,
         post_id: Date.now(),
@@ -137,6 +139,51 @@ export const editPost = async (req, res) => {
             JSON.stringify(originPostFile),
         );
         res.status(200).send('데이터 추가 완료');
+    } catch (error) {
+        res.status(500).send('데이터 추가 실패');
+    }
+};
+
+export const editComment = async (req, res) => {
+    const userId = req.body.userId;
+    const comment = req.body.comment;
+    const postId = req.params.postId;
+    const user = await fetch(
+        'http://localhost:3000/public/dummyData/userDummyData.json',
+    )
+        .then(res => res.json())
+        .then(users => {
+            const user = users.find(user => user.user_id === userId);
+            console.log(user);
+            return user;
+        })
+        .catch(error => console.error(`데이터 가져오기 에러${error}`));
+    const newComment = {
+        user_id: userId,
+        profile_img: user.profile_img,
+        nickname: user.nickname,
+        post_id: postId,
+        comment_id: Date.now(),
+        timestamp: formatTimestamp(Date.now()),
+        comment_content: comment,
+    };
+    console.log(newComment);
+    let originCommentFile = await fetch(
+        'http://localhost:3000/public/dummyData/commentDummyData.json',
+    )
+        .then(res => res.json())
+        .catch(error => console.error(`데이터 가져오기 실패: ${error}`));
+
+    originCommentFile.push(newComment);
+    try {
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/commentDummyData.json`,
+            JSON.stringify(originCommentFile),
+        );
+        res.status(200).json({
+            message: 'Data add complete',
+            data: newComment,
+        });
     } catch (error) {
         res.status(500).send('데이터 추가 실패');
     }

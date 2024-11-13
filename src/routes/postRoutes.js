@@ -26,6 +26,7 @@ postRouter.get('/:postId', postController.viewModifyPost);
 
 postRouter.post('/', postController.getPostList);
 postRouter.post('/edit', upload.single('inputImg'), postController.editPost);
+postRouter.post('/:postId/comment', postController.editComment);
 
 //PATCH
 postRouter.patch(

@@ -165,25 +165,25 @@ usrProfileBox.onclick = function () {
     }
 };
 
-postDelete.onclick = function () {
-    postModal.style.display = 'flex';
-    postModalBox.style.display = 'flex';
-};
+// postDelete.onclick = function () {
+//     postModal.style.display = 'flex';
+//     postModalBox.style.display = 'flex';
+// };
 
-postModalCancel.onclick = function () {
-    postModal.style.display = 'none';
-    postModalBox.style.display = 'none';
-};
+// postModalCancel.onclick = function () {
+//     postModal.style.display = 'none';
+//     postModalBox.style.display = 'none';
+// };
 
-commentDelete.onclick = function () {
-    commentModal.style.display = 'flex';
-    commentModalBox.style.display = 'flex';
-};
+// commentDelete.onclick = function () {
+//     commentModal.style.display = 'flex';
+//     commentModalBox.style.display = 'flex';
+// };
 
-commentModalCancel.onclick = function () {
-    commentModal.style.display = 'none';
-    commentModalBox.style.display = 'none';
-};
+// commentModalCancel.onclick = function () {
+//     commentModal.style.display = 'none';
+//     commentModalBox.style.display = 'none';
+// };
 
 postModify.onclick = function () {
     const path = window.location.pathname;
@@ -193,12 +193,25 @@ postModify.onclick = function () {
     location.href = `http://localhost:3000/posts/${postId}`;
 };
 
-commentModify.onclick = function () {
-    commentArea.value = '댓글 내용';
-};
+// commentModify.onclick = function () {
+//     commentArea.value = '댓글 내용';
+// };
 
 addCommentBtn.onclick = () => {
-    console.log(commentArea.value);
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    const postId = parts[2];
+    const data = { userId: userId, comment: commentArea.value };
+    fetch(`http://localhost:3000/posts/${postId}/comment`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(req => req.json())
+        .then(data => console.log(data));
+    window.location.reload();
 };
 
 likeBtn.onclick = () => {
