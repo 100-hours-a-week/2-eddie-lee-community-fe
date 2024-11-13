@@ -67,19 +67,16 @@
                 </div>
             </header>
             <hr class="horizontal-rule" />
-            <article class="postInfoArticle">
-                <h1 class="postTitle" id="postTitle">제목 1</h1>
+            <article class="postInfoArticle" id="postInfoArticle">
+                <h1 class="postTitle" id="postTitle"></h1>
                 <div class="creatorInfo">
                     <div class="editor">
                         <div class="profileImgBox">
-                            <img
-                                class="profileImg"
-                                src="/public/images/profile_img.webp"
-                            />
+                            <img class="profileImg" id="profileImg" />
                         </div>
-                        <p class="editorNickname">작성자 1</p>
+                        <p class="editorNickname" id="editorNickname"></p>
                     </div>
-                    <p class="time">2021-01-01 00:00:00</p>
+                    <p class="time" id="timestamp"></p>
                     <div class="modifyAndDeleteBtnBox">
                         <button class="modifyAndDeleteBtn" id="postModify">
                             수정
@@ -91,34 +88,20 @@
                 </div>
                 <hr class="postInfoHr" />
                 <div class="postPhotoBox">
-                    <img
-                        class="postPhoto"
-                        src="/public/images/포켓몬_잠만보.png"
-                    />
+                    <img class="postPhoto" id="postPhoto" />
                 </div>
-                <p class="postContent" id="postConent">
-                    친구는 세월의 도둑이다. 봄부터 흐르는 물은 겨울이 되어도
-                    얼지 않듯이 마음에서 우러나오는 우적은 역경이 닥친다고 해서
-                    식지 않는다. 불행했을 때 만난 친구는 가장 소중히 여겨야
-                    한다. 행복했을 때 함께 기쁨을 누리는 친구보다 힘들 떄 슬픔을
-                    덜어지는 친구를 더 많이 신뢰할 수 있다. 부유했을 때는 친구를
-                    사귀기 쉽지만, 어려울 때는 눈을 씻고 찾아봐도 친구를 찾기
-                    어렵다. 누군가 진정한 우정을 나누고 있다 할지라도 그 우정을
-                    지키려면 오랜 시간이 걸린다. 짧은 시간 안에 많은 친구를
-                    얻기란 불가능하다. 왜냐하면 그들은 진정한 친구가 아니기
-                    때문이다.
-                </p>
+                <p class="postContent" id="postContent"></p>
                 <div class="communicationBtnBox" id="communicationBtnBox">
                     <button class="communicationBtn" id="likeBtn">
-                        <p class="btnNumber" id="likeCount">9999</p>
+                        <p class="btnNumber" id="likeCount"></p>
                         <p class="btnText">좋아요수</p>
                     </button>
                     <button class="communicationBtn" id="viewBtn">
-                        <p class="btnNumber" id="viewCount">12000</p>
+                        <p class="btnNumber" id="viewCount"></p>
                         <p class="btnText">조회수</p>
                     </button>
                     <button class="communicationBtn" id="commentBtn">
-                        <p class="btnNumber" id="commentCount">99900</p>
+                        <p class="btnNumber" id="commentCount"></p>
                         <p class="btnText">댓글</p>
                     </button>
                 </div>
@@ -144,6 +127,7 @@
                         <div class="profileImgBox">
                             <img
                                 class="profileImg"
+                                id="profileImg"
                                 src="/public/images/profile_img.webp"
                             />
                         </div>

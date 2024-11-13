@@ -8,6 +8,8 @@ let postRouter = express.Router();
 postRouter.get('/', postController.viewPostPage);
 postRouter.get('/edit', postController.viewCreatePost);
 postRouter.get('/:postId/info', postController.viewPostInfo);
+postRouter.get('/:postId/data', postController.resPostData);
+postRouter.get('/:postId/comments', postController.getComments);
 postRouter.get('/:postId', postController.viewModifyPost);
 
 //POST

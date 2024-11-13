@@ -17,21 +17,119 @@ let likeBtn = document.getElementById('likeBtn');
 let likeCount = document.getElementById('likeCount');
 let viewCount = document.getElementById('viewCount');
 let commentCount = document.getElementById('commentCount');
+const postInfoArticle = document.getElementById('postInfoArticle');
 
-document.addEventListener('DOMContentLoaded', () => {
-    let like = parseInt(likeCount.textContent);
-    let view = parseInt(viewCount.textContent);
-    let comment = parseInt(commentCount.textContent);
+const profileImg = document.getElementById('profileImg');
+const editorNickname = document.getElementById('editorNickname');
+const timestamp = document.getElementById('timestamp');
+const postPhoto = document.getElementById('postPhoto');
+const postContent = document.getElementById('postContent');
 
-    if (like > 999) {
-        likeCount.textContent = `${parseInt(like / 1000)}k`;
+const numericalPrefix = number => {
+    if (number > 999) {
+        return `${parseInt(number / 1000)}k`;
+    } else {
+        return number;
     }
-    if (view > 999) {
-        viewCount.textContent = `${parseInt(view / 1000)}k`;
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const url = window.location.pathname;
+    const postId = url.split('/')[2];
+
+    const getData = await fetch(`http://localhost:3000/posts/${postId}/data`);
+
+    console.log(getData);
+    const postData = await getData.json();
+    console.log(postData);
+    postTitle.textContent = postData.title;
+    if (postData.image === '') {
+        profileImg.src = '/public/images/profile_img.webp';
+    } else {
+        profileImg.src = postData.image;
     }
-    if (comment > 999) {
-        commentCount.textContent = `${parseInt(comment / 1000)}k`;
+
+    //HACK
+    editorNickname.textContent = '작성자 1';
+    timestamp.textContent = postData.timestamp;
+    if (postData.image === '') {
+        postPhoto.src = '/public/images/profile_img.webp';
+    } else {
+        postPhoto.src = postData.image;
     }
+    postContent.textContent = postData.content;
+
+    let like = postData.like;
+    let view = postData.view;
+    let comment = postData.comment_count;
+
+    likeCount.textContent = numericalPrefix(like);
+
+    viewCount.textContent = numericalPrefix(++view);
+
+    commentCount.textContent = numericalPrefix(comment);
+
+    const getComments = await fetch(
+        `http://localhost:3000/posts/${postId}/comments`,
+    )
+        .then(res => res.json())
+        .catch(error => console.error(error));
+    //여기도 offset으로 infinite scroll 구현해보기 (추가)
+    getComments.forEach(comment => {
+        const newComment = document.createElement('div');
+        newComment.classList.add('commentViewBox');
+        newComment.id = comment.comment_id;
+
+        const commentEditorBox = document.createElement('div');
+        commentEditorBox.classList.add('commentViewEditorBox');
+
+        const profileImgBox = document.createElement('div');
+        profileImgBox.classList.add('profileImgBox');
+
+        const profileImg = document.createElement('img');
+        profileImg.classList.add('profileImg');
+        //HACK
+        profileImg.src = '/public/images/profile_img.webp';
+
+        profileImgBox.appendChild(profileImg);
+
+        const editorNickname = document.createElement('p');
+        editorNickname.classList.add('editorNickname');
+        //HACK
+        editorNickname.textContent = '작성자 1';
+
+        const time = document.createElement('p');
+        time.classList.add('time');
+        time.textContent = comment.timestamp;
+
+        const modifyAndDeleteBtnBox = document.createElement('div');
+        modifyAndDeleteBtnBox.classList.add('modifyAndDeleteBtnBox');
+
+        const modifyBtn = document.createElement('button');
+        modifyBtn.classList.add('modifyAndDeleteBtn');
+        modifyBtn.textContent = '수정';
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('modifyAndDeleteBtn');
+        deleteBtn.textContent = '삭제';
+
+        modifyAndDeleteBtnBox.appendChild(modifyBtn);
+        modifyAndDeleteBtnBox.appendChild(deleteBtn);
+
+        commentEditorBox.appendChild(profileImgBox);
+        commentEditorBox.appendChild(editorNickname);
+        commentEditorBox.appendChild(time);
+        commentEditorBox.appendChild(modifyAndDeleteBtnBox);
+
+        const commentContent = document.createElement('p');
+        commentContent.classList.add('commentContent');
+        commentContent.textContent = comment.comment_content;
+
+        newComment.appendChild(commentEditorBox);
+        newComment.appendChild(commentContent);
+
+        postInfoArticle.appendChild(newComment);
+    });
 });
 
 usrProfileBox.onclick = function () {
@@ -68,16 +166,7 @@ postModify.onclick = function () {
     const parts = path.split('/');
     const postId = parts[2];
 
-    history.pushState(null, '', `/posts/${postId}`);
-
-    fetch(`http://localhost:3000/posts/${postId}`)
-        .then(res => res.text())
-        .then(html => {
-            document.open();
-            document.write(html);
-            document.close();
-        })
-        .catch(error => console.error(error));
+    location.href = `http://localhost:3000/posts/${postId}`;
 };
 
 commentModify.onclick = function () {
@@ -89,10 +178,12 @@ addCommentBtn.onclick = () => {
 };
 
 likeBtn.onclick = () => {
+    //좋아요 수가 늘어났을 때 다시 저장하는 부분 아직 안만들었음
     let like = parseInt(likeCount.textContent);
     console.log(likeCount.textContent);
-    if (++like > 1000) {
+    if (++like >= 1000) {
         like /= 1000;
         likeCount.textContent = `${like}k`;
     }
+    console.log(like);
 };

@@ -1,6 +1,9 @@
 import { viewDirname, rootDirname } from '../routes/index.js';
 import fs from 'fs';
 
+const postFilePath =
+    'http://localhost:3000/public/dummyData/postDummyData.json';
+
 //GET
 export const viewPostPage = async (req, res) => {
     res.sendFile(`${viewDirname}/Posts.html`);
@@ -14,6 +17,45 @@ export const viewPostInfo = async (req, res) => {
     res.sendFile(`${viewDirname}/postInfo.html`);
 };
 
+export const resPostData = async (req, res) => {
+    const postId = req.params.postId;
+
+    console.log(postId);
+    const postData = await fetch(postFilePath)
+        .then(res => res.json())
+        .then(getAllPost => {
+            return getAllPost.find(post => post.post_id == postId);
+        })
+        .catch(error => console.error(error));
+
+    res.status(200).json(postData);
+};
+
+export const getComments = async (req, res) => {
+    let comments = [];
+    const postId = req.params.postId;
+    const postComments = await fetch(
+        'http://localhost:3000/public/dummyData/commentDummyData.json',
+    )
+        .then(res => res.json())
+        .then(allComments => {
+            allComments.forEach(comment => {
+                if (comment.post_id === postId) {
+                    comments.push(comment);
+                }
+            });
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({
+                message: 'internal_server_error',
+                data: null,
+            });
+        });
+
+    res.status(200).json(comments);
+};
+
 export const viewModifyPost = async (req, res) => {
     res.sendFile(`${viewDirname}/modifyPost.html`);
 };
@@ -23,9 +65,7 @@ export const getPostList = async (req, res) => {
     const offset = req.body.offset;
     console.log(offset);
     let postArr = [];
-    const postList = await fetch(
-        'http://localhost:3000/public/dummyData/postDummyData.json',
-    )
+    const postList = await fetch(postFilePath)
         .then(res => res.json())
         .then(postList => {
             for (let i = 0; i < 10; i++) {
@@ -40,6 +80,9 @@ export const getPostList = async (req, res) => {
 export const editPost = async (req, res) => {
     const fileData = req.file;
     const postData = req.body;
+    if (!fileData) {
+        fileData = '';
+    }
     const postObj = {
         //HACK
         user_id: 1,

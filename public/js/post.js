@@ -41,7 +41,7 @@ function getContents() {
 
                 const comment = document.createElement('li');
                 comment.classList.add('socialListTxt');
-                comment.textContent = `댓글 ${postInfo.countComment}`;
+                comment.textContent = `댓글 ${postInfo.comment_count}`;
 
                 const view = document.createElement('li');
                 view.classList.add('socialListTxt');
@@ -55,7 +55,7 @@ function getContents() {
                 // 시간 요소 생성
                 const time = document.createElement('p');
                 time.classList.add('time');
-                time.textContent = postInfo.timeStamp;
+                time.textContent = postInfo.timestamp;
 
                 // listAndTimeDiv에 socialList와 time 추가
                 listAndTimeDiv.appendChild(socialList);

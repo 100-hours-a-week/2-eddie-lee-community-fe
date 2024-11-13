@@ -51,7 +51,6 @@ loginForm.onsubmit = function (event) {
     let originPasswd = formData.get('passwd');
     formData.set('passwd', btoa(originPasswd));
 
-    console.log(formData.get('passwd'));
     fetch('/auth/login', {
         method: 'POST',
         body: formData,
