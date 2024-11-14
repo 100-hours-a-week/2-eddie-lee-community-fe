@@ -1,22 +1,20 @@
-let postModify = document.getElementById('postModify');
-let postDelete = document.getElementById('postDelete');
-let postModal = document.getElementById('postModal');
-let postModalBox = document.getElementById('postModalBox');
-let postModalCancel = document.getElementById('postModalCancel');
-let postModalOk = document.getElementById('postModalOk');
-let commentDelete = document.getElementById('commentDelete');
-let commentModify = document.getElementById('commentModify');
-let usrProfileBox = document.getElementById('usrProfileBox');
-let commentModal = document.getElementById('commentModal');
-let commentModalBox = document.getElementById('commentModalBox');
-let commentModalCancel = document.getElementById('commentModalCancel');
-let commentModalOk = document.getElementById('commentModalOk');
-let commentArea = document.getElementById('commentArea');
-let addCommentBtn = document.getElementById('addCommentBtn');
-let likeBtn = document.getElementById('likeBtn');
-let likeCount = document.getElementById('likeCount');
-let viewCount = document.getElementById('viewCount');
-let commentCount = document.getElementById('commentCount');
+const postModify = document.getElementById('postModify');
+const postDelete = document.getElementById('postDelete');
+const postModal = document.getElementById('postModal');
+const postModalBox = document.getElementById('postModalBox');
+const postModalCancel = document.getElementById('postModalCancel');
+const postModalOk = document.getElementById('postModalOk');
+const usrProfileBox = document.getElementById('usrProfileBox');
+const commentModal = document.getElementById('commentModal');
+const commentModalBox = document.getElementById('commentModalBox');
+const commentModalCancel = document.getElementById('commentModalCancel');
+const commentModalOk = document.getElementById('commentModalOk');
+const commentArea = document.getElementById('commentArea');
+const addCommentBtn = document.getElementById('addCommentBtn');
+const likeBtn = document.getElementById('likeBtn');
+const likeCount = document.getElementById('likeCount');
+const viewCount = document.getElementById('viewCount');
+const commentCount = document.getElementById('commentCount');
 const postInfoArticle = document.getElementById('postInfoArticle');
 const profileImg = document.getElementById('profileImg');
 const editorNickname = document.getElementById('editorNickname');
@@ -25,6 +23,7 @@ const postPhoto = document.getElementById('postPhoto');
 const postContent = document.getElementById('postContent');
 const userProfile = document.getElementById('userProfile');
 const modifyAndDeleteBtnBox = document.getElementById('modifyAndDeleteBtnBox');
+const modifyCommentBtn = document.getElementById('modifyCommentBtn');
 
 let userId = 0;
 
@@ -33,6 +32,14 @@ const numericalPrefix = number => {
         return `${parseInt(number / 1000)}k`;
     } else {
         return number;
+    }
+};
+
+const commentIsEmpty = commentLength => {
+    if (commentLength === 0) {
+        return '#ACA0EB';
+    } else {
+        return '#7F6AEE';
     }
 };
 
@@ -78,8 +85,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     profileImg.src = postData.profile_img;
     editorNickname.textContent = postData.nickname;
     timestamp.textContent = postData.timestamp;
-    if (userId !== postData.user_id)
-        modifyAndDeleteBtnBox.style.display = 'none';
+    if (userId !== postData.user_id) {
+        postModify.style.display = 'none';
+        postDelete.style.display = 'none';
+    } else {
+        postDelete.onclick = function () {
+            postModal.style.display = 'flex';
+            postModalBox.style.display = 'flex';
+        };
+    }
 
     postPhoto.src = postData.image;
     postContent.textContent = postData.content;
@@ -124,26 +138,65 @@ document.addEventListener('DOMContentLoaded', async () => {
         const time = document.createElement('p');
         time.classList.add('time');
         time.textContent = comment.timestamp;
-        if (comment.user_id === userId) {
-            const modifyAndDeleteBtnBox = document.createElement('div');
-            modifyAndDeleteBtnBox.classList.add('modifyAndDeleteBtnBox');
-
-            const modifyBtn = document.createElement('button');
-            modifyBtn.classList.add('modifyAndDeleteBtn');
-            modifyBtn.textContent = '수정';
-
-            const deleteBtn = document.createElement('button');
-            deleteBtn.classList.add('modifyAndDeleteBtn');
-            deleteBtn.textContent = '삭제';
-
-            modifyAndDeleteBtnBox.appendChild(modifyBtn);
-            modifyAndDeleteBtnBox.appendChild(deleteBtn);
-        }
 
         commentEditorBox.appendChild(profileImgBox);
         commentEditorBox.appendChild(editorNickname);
         commentEditorBox.appendChild(time);
-        commentEditorBox.appendChild(modifyAndDeleteBtnBox);
+
+        if (comment.user_id === userId) {
+            const btnBox = document.createElement('div');
+            btnBox.classList.add('modifyAndDeleteBtnBox');
+
+            const modifyBtn = document.createElement('button');
+            modifyBtn.classList.add('modifyAndDeleteBtn');
+            modifyBtn.id = `commentModify-${comment.comment_id}`;
+            modifyBtn.textContent = '수정';
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('modifyAndDeleteBtn');
+            deleteBtn.id = `commentDelete-${comment.comment_id}`;
+            deleteBtn.textContent = '삭제';
+
+            btnBox.appendChild(modifyBtn);
+            btnBox.appendChild(deleteBtn);
+
+            commentEditorBox.appendChild(btnBox);
+            modifyBtn.onclick = async () => {
+                const commentData = await fetch(
+                    `http://localhost:3000/posts/${postId}/comments/${comment.comment_id}`,
+                )
+                    .then(res => res.json())
+                    .catch(error => console.error(error));
+                commentArea.value = commentData.comment_content;
+                addCommentBtn.classList.add('hide');
+                modifyCommentBtn.classList.remove('hide');
+                patchComment(commentData);
+                location.reload();
+            };
+
+            deleteBtn.onclick = function () {
+                commentModal.style.display = 'flex';
+                commentModalBox.style.display = 'flex';
+            };
+            commentModalCancel.onclick = function () {
+                commentModal.style.display = 'none';
+                commentModalBox.style.display = 'none';
+            };
+            commentModalOk.onclick = async () => {
+                await fetch(
+                    `http://localhost:3000/posts/${postId}/comments/${comment.comment_id}`,
+                    {
+                        method: 'DELETE',
+                    },
+                )
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error(error));
+
+                commentModal.style.display = 'none';
+                commentModalBox.style.display = 'none';
+            };
+        }
 
         const commentContent = document.createElement('p');
         commentContent.classList.add('commentContent');
@@ -156,6 +209,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+commentArea.onkeyup = () => {
+    const btnColor = commentIsEmpty(commentArea.value.length);
+    addCommentBtn.style.backgroundColor = btnColor;
+};
+
 usrProfileBox.onclick = function () {
     if (dropdown.style.display == 'none') {
         dropdown.style.display = 'flex';
@@ -165,24 +223,9 @@ usrProfileBox.onclick = function () {
     }
 };
 
-// postDelete.onclick = function () {
-//     postModal.style.display = 'flex';
-//     postModalBox.style.display = 'flex';
-// };
-
 // postModalCancel.onclick = function () {
 //     postModal.style.display = 'none';
 //     postModalBox.style.display = 'none';
-// };
-
-// commentDelete.onclick = function () {
-//     commentModal.style.display = 'flex';
-//     commentModalBox.style.display = 'flex';
-// };
-
-// commentModalCancel.onclick = function () {
-//     commentModal.style.display = 'none';
-//     commentModalBox.style.display = 'none';
 // };
 
 postModify.onclick = function () {
@@ -192,10 +235,6 @@ postModify.onclick = function () {
 
     location.href = `http://localhost:3000/posts/${postId}`;
 };
-
-// commentModify.onclick = function () {
-//     commentArea.value = '댓글 내용';
-// };
 
 addCommentBtn.onclick = () => {
     const path = window.location.pathname;
@@ -213,7 +252,26 @@ addCommentBtn.onclick = () => {
         .then(data => console.log(data));
     window.location.reload();
 };
-
+async function patchComment(commentData) {
+    modifyCommentBtn.addEventListener(
+        'click',
+        await function () {
+            commentData.comment_content = commentArea.value;
+            fetch(
+                `http://localhost:3000/posts/${commentData.post_id}/comments/${commentData.comment_id}`,
+                {
+                    method: 'PATCH',
+                    body: JSON.stringify(commentData),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
+                .then(res => res.json())
+                .then(data => console.log(data));
+        },
+    );
+}
 likeBtn.onclick = () => {
     //좋아요 수가 늘어났을 때 다시 저장하는 부분 아직 안만들었음
     let like = parseInt(likeCount.textContent);

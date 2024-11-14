@@ -21,6 +21,7 @@ postRouter.get('/:postId/info', postController.viewPostInfo);
 postRouter.get('/:postId/data', postController.resPostData);
 postRouter.get('/:postId/comments', postController.getComments);
 postRouter.get('/:postId', postController.viewModifyPost);
+postRouter.get('/:postId/comments/:commentId', postController.getCommentData);
 
 //POST
 
@@ -34,5 +35,8 @@ postRouter.patch(
     upload.single('inputImg'),
     postController.modifyPost,
 );
+postRouter.patch('/:postId/comments/:commentId', postController.modifyComment);
 
+//DELETE
+postRouter.delete('/:postId/comments/:commentId', postController.deleteComment);
 export default postRouter;

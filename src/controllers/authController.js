@@ -3,14 +3,14 @@ import fs from 'fs';
 
 //GET
 export const viewLogin = async (req, res) => {
-    // req.session.destroy(err => {
-    //     if (err) {
-    //         return res.status(500).send('Error destroying session');
-    //     }
-    //     res.clearCookie('connect.sid');
-    //     res.sendFile(`${viewDirname}/login.html`);
-    // });
-    res.sendFile(`${viewDirname}/login.html`);
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send('Error destroying session');
+        }
+        res.clearCookie('connect.sid');
+        res.sendFile(`${viewDirname}/login.html`);
+    });
+    //res.sendFile(`${viewDirname}/login.html`);
 };
 export const viewSignup = async (req, res) => {
     res.sendFile(`${viewDirname}/signUp.html`);

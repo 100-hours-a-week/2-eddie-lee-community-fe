@@ -74,6 +74,17 @@ export const viewModifyPost = async (req, res) => {
     res.sendFile(`${viewDirname}/modifyPost.html`);
 };
 
+export const getCommentData = async (req, res) => {
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const response = await fetch(
+        `http://localhost:3000/data/posts/${postId}/comments/${commentId}`,
+    ).catch(error => res.json({ result: 'error occurred' }));
+    const commentData = await response.json();
+
+    res.json(commentData);
+};
+
 //POST
 export const getPostList = async (req, res) => {
     const offset = req.body.offset;
@@ -192,4 +203,55 @@ export const editComment = async (req, res) => {
 //PATCH
 export const modifyPost = async (req, res) => {
     res.json(req.body);
+};
+
+export const modifyComment = async (req, res) => {
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const commentData = await fetch(
+        `http://localhost:3000/data/comments`,
+    ).catch(error => console.error(error));
+    const comments = await commentData.json();
+    const updateComments = comments.map(comment =>
+        comment.post_id == postId && comment.comment_id == commentId
+            ? { ...comment, comment_content: req.body.comment_content }
+            : comment,
+    );
+    try {
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/commentDummyData.json`,
+            JSON.stringify(updateComments),
+        );
+        res.status(200).json({
+            message: 'Data modify complete',
+            data: req.body,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'data modify Failed...' });
+    }
+};
+
+//DELETE
+export const deleteComment = async (req, res) => {
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+    const commentData = await fetch(
+        'http://localhost:3000/data/comments',
+    ).catch(error => console.error(error));
+    const comments = await commentData.json();
+    const deleteComments = comments.filter(
+        comment => comment.comment_id != commentId || comment.post_id != postId,
+    );
+    try {
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/commentDummyData.json`,
+            JSON.stringify(deleteComments),
+        );
+        res.status(200).json({
+            message: 'Data delete complete',
+            data: req.body,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'data delete Failed...' });
+    }
 };
