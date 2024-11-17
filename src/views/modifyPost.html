@@ -30,10 +30,10 @@
                         src="/public/images/profile_img.webp"
                     />
                     <div class="dropdown" id="dropdown">
-                        <a href="http://localhost:3000/account/modify_user_info"
+                        <a href="http://localhost:3000/users/:userId/user"
                             >회원정보수정</a
                         >
-                        <a href="http://localhost:3000/account/modify_passwd"
+                        <a href="http://localhost:3000/users/:userId/passwd"
                             >비밀번호수정</a
                         >
                         <a href="http://localhost:3000/account/logout"
@@ -44,7 +44,7 @@
             </header>
             <hr class="horizontal-rule" />
             <div class="createPostTitleBox">
-                <h1 class="createPostTitle">게시글 작성</h1>
+                <h1 class="createPostTitle">게시글 수정</h1>
             </div>
             <form class="postForm" id="postForm">
                 <article class="createPost">
@@ -53,7 +53,7 @@
                         id="inputTitle"
                         type="text"
                         class="postTitle"
-                        placeholder="제목1"
+                        name="title"
                         maxlength="26"
                     />
                     <label for="inputContent" class="inputLabel">내용*</label>
@@ -61,6 +61,7 @@
                         id="inputContent"
                         class="postContent"
                         type="textbox"
+                        name="content"
                         placeholder="친구는 세월의 도둑이다. 봄부터 흐르는 물은 겨울이 되어도 얼지 않듯이 마음에서 우러나오는 우적은 역경이 닥친다고 해서 식지 않는다.
 불행했을 때 만난 친구는 가장 소중히 여겨야한다.
 행복했을 때 함께 기쁨을 누리는 친구보다 힘들 떄 슬픔을 덜어지는 친구를 더 많이 신뢰할 수 있다.

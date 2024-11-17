@@ -64,7 +64,7 @@ export const signup = async (req, res) => {
     }
 
     const addUserData = {
-        user_id: Date.now(),
+        user_id: Date.now().toString(),
         profile_img: fileData,
         email: textData.email,
         passwd: textData.passwd,

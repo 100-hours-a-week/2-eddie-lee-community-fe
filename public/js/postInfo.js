@@ -65,8 +65,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const url = window.location.pathname;
     const postId = url.split('/')[2];
 
-    const getData = await fetch(`http://localhost:3000/posts/${postId}/data`);
+    const getData = await fetch(`http://localhost:3000/data/posts/${postId}`);
     const postData = await getData.json();
+    console.log(postData);
     const getUserData = await fetch(
         `http://localhost:3000/public/dummyData/userDummyData.json`,
     )
@@ -89,9 +90,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         postModify.style.display = 'none';
         postDelete.style.display = 'none';
     } else {
+        postModify.onclick = function () {
+            const path = window.location.pathname;
+            const parts = path.split('/');
+            const postId = parts[2];
+
+            location.href = `http://localhost:3000/posts/${postId}`;
+        };
         postDelete.onclick = function () {
             postModal.style.display = 'flex';
             postModalBox.style.display = 'flex';
+        };
+        postModalCancel.onclick = function () {
+            postModal.style.display = 'none';
+            postModalBox.style.display = 'none';
+        };
+        postModalOk.onclick = async function () {
+            await fetch(`http://localhost:3000/posts/${postId}`, {
+                method: 'DELETE',
+            })
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(error => console.error(error));
+
+            commentModal.style.display = 'none';
+            commentModalBox.style.display = 'none';
+
+            location.href = 'http://localhost:3000/posts';
         };
     }
 
@@ -104,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     likeCount.textContent = numericalPrefix(like);
 
-    viewCount.textContent = numericalPrefix(++view);
+    viewCount.textContent = numericalPrefix(view);
 
     commentCount.textContent = numericalPrefix(comment);
 
@@ -171,7 +196,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 addCommentBtn.classList.add('hide');
                 modifyCommentBtn.classList.remove('hide');
                 patchComment(commentData);
-                location.reload();
             };
 
             deleteBtn.onclick = function () {
@@ -195,6 +219,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 commentModal.style.display = 'none';
                 commentModalBox.style.display = 'none';
+
+                window.location.reload();
             };
         }
 
@@ -223,19 +249,6 @@ usrProfileBox.onclick = function () {
     }
 };
 
-// postModalCancel.onclick = function () {
-//     postModal.style.display = 'none';
-//     postModalBox.style.display = 'none';
-// };
-
-postModify.onclick = function () {
-    const path = window.location.pathname;
-    const parts = path.split('/');
-    const postId = parts[2];
-
-    location.href = `http://localhost:3000/posts/${postId}`;
-};
-
 addCommentBtn.onclick = () => {
     const path = window.location.pathname;
     const parts = path.split('/');
@@ -252,6 +265,7 @@ addCommentBtn.onclick = () => {
         .then(data => console.log(data));
     window.location.reload();
 };
+
 async function patchComment(commentData) {
     modifyCommentBtn.addEventListener(
         'click',
@@ -268,10 +282,13 @@ async function patchComment(commentData) {
                 },
             )
                 .then(res => res.json())
-                .then(data => console.log(data));
+                .then(data => console.log(data))
+                .catch(err => console.error(err));
         },
     );
+    window.location.reload();
 }
+
 likeBtn.onclick = () => {
     //좋아요 수가 늘어났을 때 다시 저장하는 부분 아직 안만들었음
     let like = parseInt(likeCount.textContent);

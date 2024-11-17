@@ -2,16 +2,16 @@ import express from 'express';
 import * as postController from '../controllers/postController.js';
 import { rootDirname } from '../routes/index.js';
 import multer from 'multer';
-const userProfileImg = multer.diskStorage({
+const postImg = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, `${rootDirname}/public/userPhotos`);
+        cb(null, `${rootDirname}/public/postPhotos`);
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
     },
 });
 
-const upload = multer({ storage: userProfileImg });
+const upload = multer({ storage: postImg });
 
 let postRouter = express.Router();
 //GET

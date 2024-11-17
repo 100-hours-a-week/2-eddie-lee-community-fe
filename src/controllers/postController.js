@@ -111,7 +111,7 @@ export const editPost = async (req, res) => {
     const time = Date.now();
     const timestamp = formatTimestamp(time);
     if (!fileData) {
-        fileData = '/public/images/KTB 줌 배경화면_yellow.png';
+        fileData = '/public/userPhotos/defaultPostImg.png';
     } else {
         const filePath = `/public/userPhotos/${req.file.filename}`;
         fileData = filePath;
@@ -126,7 +126,7 @@ export const editPost = async (req, res) => {
     );
     const postObj = {
         user_id: postData.user_id,
-        post_id: Date.now(),
+        post_id: Date.now().toString(),
         profile_img: user.profile_img,
         nickname: user.nickname,
         title: postData.title,
@@ -174,7 +174,7 @@ export const editComment = async (req, res) => {
         profile_img: user.profile_img,
         nickname: user.nickname,
         post_id: postId,
-        comment_id: Date.now(),
+        comment_id: Date.now().toString(),
         timestamp: formatTimestamp(Date.now()),
         comment_content: comment,
     };
@@ -202,7 +202,49 @@ export const editComment = async (req, res) => {
 
 //PATCH
 export const modifyPost = async (req, res) => {
-    res.json(req.body);
+    const postId = req.params.postId;
+    const reqPostData = req.body;
+    let postImg = req.file;
+
+    if (!postImg) {
+        postImg = '/public/postPhotos/defaultPostImg.png';
+    } else {
+        const filePath = `/public/postPhoto/${req.file.filename}`;
+        postImg = filePath;
+    }
+
+    let posts = [];
+    try {
+        const reqData = await fetch(`http://localhost:3000/data/posts`);
+        posts = await reqData.json();
+    } catch (err) {
+        console.error(`데이터 가져오기 실패, 에러메시지 : ${err}`);
+    }
+    try {
+        const updatePosts = posts.map(post =>
+            post.post_id === postId
+                ? {
+                      ...post,
+                      title: reqPostData.title,
+                      content: reqPostData.content,
+                      image: postImg,
+                  }
+                : post,
+        );
+
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/postDummyData.json`,
+            JSON.stringify(updatePosts, null, 2),
+            'utf8',
+        );
+        res.status(200).json({
+            message: 'Data modify complete',
+            data: req.body,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(404).json({ result: '게시글 수정 실패', message: err });
+    }
 };
 
 export const modifyComment = async (req, res) => {
@@ -213,7 +255,7 @@ export const modifyComment = async (req, res) => {
     ).catch(error => console.error(error));
     const comments = await commentData.json();
     const updateComments = comments.map(comment =>
-        comment.post_id == postId && comment.comment_id == commentId
+        comment.post_id === postId && comment.comment_id === commentId
             ? { ...comment, comment_content: req.body.comment_content }
             : comment,
     );
@@ -221,6 +263,7 @@ export const modifyComment = async (req, res) => {
         fs.writeFileSync(
             `${rootDirname}/public/dummyData/commentDummyData.json`,
             JSON.stringify(updateComments),
+            'utf8',
         );
         res.status(200).json({
             message: 'Data modify complete',
