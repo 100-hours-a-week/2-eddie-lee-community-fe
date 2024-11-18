@@ -24,8 +24,11 @@ const postContent = document.getElementById('postContent');
 const userProfile = document.getElementById('userProfile');
 const modifyAndDeleteBtnBox = document.getElementById('modifyAndDeleteBtnBox');
 const modifyCommentBtn = document.getElementById('modifyCommentBtn');
+const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
+const modifyPasswdLink = document.getElementById('modifyPasswdLink');
+const logoutLink = document.getElementById('logoutLink');
 
-let userId = 0;
+let userId = '';
 
 const numericalPrefix = number => {
     if (number > 999) {
@@ -65,6 +68,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const url = window.location.pathname;
     const postId = url.split('/')[2];
 
+    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
+    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
+    logoutLink.href = 'http://localhost:3000/auth/login';
     //조회 수 증가
     await fetch(`http://localhost:3000/posts/${postId}/view`, {
         method: 'PATCH',

@@ -1,10 +1,13 @@
-let submitBtn = document.getElementById('submitBtn');
-let inputTitle = document.getElementById('inputTitle');
-let inputContent = document.getElementById('inputContent');
-let userProfile = document.getElementById('userProfile');
-let usrProfileBox = document.getElementById('usrProfileBox');
-let dropdown = document.getElementById('dropdown');
-let postForm = document.getElementById('postForm');
+const submitBtn = document.getElementById('submitBtn');
+const inputTitle = document.getElementById('inputTitle');
+const inputContent = document.getElementById('inputContent');
+const userProfile = document.getElementById('userProfile');
+const usrProfileBox = document.getElementById('usrProfileBox');
+const dropdown = document.getElementById('dropdown');
+const postForm = document.getElementById('postForm');
+const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
+const modifyPasswdLink = document.getElementById('modifyPasswdLink');
+const logoutLink = document.getElementById('logoutLink');
 
 document.addEventListener('DOMContentLoaded', async () => {
     let userId = '';
@@ -28,6 +31,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             );
         })
         .catch(error => console.error(error));
+    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
+    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
+    logoutLink.href = 'http://localhost:3000/auth/login';
     const userIdInput = document.createElement('input');
     userIdInput.type = 'hidden';
     userIdInput.name = 'userId';

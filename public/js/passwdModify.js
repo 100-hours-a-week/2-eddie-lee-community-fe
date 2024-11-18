@@ -1,15 +1,22 @@
-let inputPasswd = document.getElementById('inputPasswd');
-let inputRecheckPasswd = document.getElementById('inputRecheckPasswd');
-let inputPasswdHelperText = document.getElementById('inputPasswdHelperText');
-let passwdDifferent = document.getElementById('passwdDifferent');
-let inputPasswdInvalidHelperText = document.getElementById(
+const inputPasswd = document.getElementById('inputPasswd');
+const inputRecheckPasswd = document.getElementById('inputRecheckPasswd');
+const inputPasswdHelperText = document.getElementById('inputPasswdHelperText');
+const passwdDifferent = document.getElementById('passwdDifferent');
+const inputPasswdInvalidHelperText = document.getElementById(
     'inputPasswdInvalidHelperText',
 );
-let inputCheckHelperText = document.getElementById('inputCheckHelperText');
-let inputCheckDifferent = document.getElementById('inputCheckDifferent');
-let modifyBtn = document.getElementById('modifyBtn');
-let usrProfileBox = document.getElementById('usrProfileBox');
-let toast = document.getElementById('toast');
+const inputCheckHelperText = document.getElementById('inputCheckHelperText');
+const inputCheckDifferent = document.getElementById('inputCheckDifferent');
+const modifyBtn = document.getElementById('modifyBtn');
+const usrProfileBox = document.getElementById('usrProfileBox');
+const toast = document.getElementById('toast');
+const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
+const modifyPasswdLink = document.getElementById('modifyPasswdLink');
+const logoutLink = document.getElementById('logoutLink');
+
+modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
+modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
+logoutLink.href = 'http://localhost:3000/auth/login';
 
 const passwdPattern =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;

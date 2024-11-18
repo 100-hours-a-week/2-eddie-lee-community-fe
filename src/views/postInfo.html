@@ -54,15 +54,9 @@
                         src="/public/images/profile_img.webp"
                     />
                     <div class="dropdown" id="dropdown">
-                        <a href="http://localhost:3000/account/modify_user_info"
-                            >회원정보수정</a
-                        >
-                        <a href="http://localhost:3000/account/modify_passwd"
-                            >비밀번호수정</a
-                        >
-                        <a href="http://localhost:3000/account/logout"
-                            >로그아웃</a
-                        >
+                        <a id="modifyUserInfoLink">회원정보수정</a>
+                        <a id="modifyPasswdLink">비밀번호수정</a>
+                        <a id="logoutLink">로그아웃</a>
                     </div>
                 </div>
             </header>
@@ -132,34 +126,6 @@
                         댓글 수정
                     </button>
                 </div>
-                <!-- <div class="commentViewBox">
-                    <div class="commentViewEditorBox">
-                        <div class="profileImgBox">
-                            <img
-                                class="profileImg"
-                                id="profileImg"
-                                src="/public/images/profile_img.webp"
-                            />
-                        </div>
-                        <p class="editorNickname">작성자 1</p>
-                        <p class="time">2024-01-01 00:00:00</p>
-                        <div class="modifyAndDeleteBtnBox">
-                            <button
-                                class="modifyAndDeleteBtn"
-                                id="commentModify"
-                            >
-                                수정
-                            </button>
-                            <button
-                                class="modifyAndDeleteBtn"
-                                id="commentDelete"
-                            >
-                                삭제
-                            </button>
-                        </div>
-                    </div>
-                    <p class="commentContent">댓글 내용</p>
-                </div> -->
             </article>
         </section>
         <script type="module" src="/public/js/postInfo.js"></script>

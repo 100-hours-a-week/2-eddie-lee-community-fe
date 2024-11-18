@@ -10,7 +10,6 @@ export const viewLogin = async (req, res) => {
         res.clearCookie('connect.sid');
         res.sendFile(`${viewDirname}/login.html`);
     });
-    //res.sendFile(`${viewDirname}/login.html`);
 };
 export const viewSignup = async (req, res) => {
     res.sendFile(`${viewDirname}/signUp.html`);
@@ -21,13 +20,14 @@ export const login = async (req, res) => {
     const loginInfo = req.body;
     const email = loginInfo.email;
     const passwd = loginInfo.passwd;
-
-    const users = await fetch(
-        `http://localhost:3000/public/dummyData/userDummyData.json`,
-    )
-        .then(res => res.json())
-        .catch(error => console.error(error));
-
+    let users = [];
+    try {
+        const getUsers = await fetch(`http://localhost:3000/data/users`);
+        users = await getUsers.json();
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
     const user = users.find(
         findUser => findUser.email === email && findUser.passwd === passwd,
     );
@@ -45,6 +45,7 @@ export const login = async (req, res) => {
             userProfileImg: user.profile_img,
             userEmail: user.email,
         };
+
         res.status(200).json({
             message: 'Login success',
             user: req.session.user,

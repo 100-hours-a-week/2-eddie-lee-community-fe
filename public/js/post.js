@@ -1,31 +1,41 @@
-let usrProfileBox = document.getElementById('usrProfileBox');
-let dropdown = document.getElementById('dropdown');
-let createPostBtn = document.getElementById('createPostBtn');
-let postContentArea = document.getElementById('postContentArea');
+const usrProfileBox = document.getElementById('usrProfileBox');
+const dropdown = document.getElementById('dropdown');
+const createPostBtn = document.getElementById('createPostBtn');
+const postContentArea = document.getElementById('postContentArea');
 const userProfile = document.getElementById('userProfile');
+const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
+const modifyPasswdLink = document.getElementById('modifyPasswdLink');
+const logoutLink = document.getElementById('logoutLink');
 //게시글 목록의 요소를 담는 div태그
-let postContentDiv = document.getElementsByClassName('postContentDiv');
+const postContentDiv = document.getElementsByClassName('postContentDiv');
 
 let contentsCount = 0;
 let userId = 0;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await fetch('http://localhost:3000/users/data', {
-        method: 'GET',
-        credentials: 'include',
-    })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error('User data not exist');
-            }
-            return res.json();
+    try {
+        await fetch('http://localhost:3000/users/data', {
+            method: 'GET',
+            credentials: 'include',
         })
-        .then(userData => {
-            const user = userData.user;
-            userProfile.src = user.userProfileImg;
-            userId = user.userId;
-        })
-        .catch(error => console.error(error));
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('User data not exist');
+                }
+                return res.json();
+            })
+            .then(userData => {
+                const user = userData.user;
+                userProfile.src = user.userProfileImg;
+                userId = user.userId;
+            })
+            .catch(error => console.error(error));
+    } catch (error) {
+        console.error(error.message);
+    }
+    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
+    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
+    logoutLink.href = 'http://localhost:3000/auth/login';
 });
 
 //infinite scroll

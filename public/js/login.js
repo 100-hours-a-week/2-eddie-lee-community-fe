@@ -43,26 +43,32 @@ inputPasswd.onkeyup = function () {
     checkValid(inputEmail, inputPasswd);
 };
 
-loginForm.onsubmit = function (event) {
+loginForm.onsubmit = async function (event) {
     event.preventDefault();
 
     const formData = new FormData(loginForm);
 
     let originPasswd = formData.get('passwd');
     formData.set('passwd', btoa(originPasswd));
-    fetch('/auth/login', {
+    const data = await fetch('/auth/login', {
         method: 'POST',
         body: formData,
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`${response.json().message}`);
-            }
-            return response.json();
-        })
-        .then(result => {
-            console.log(result.message);
-            window.location.href = 'http://localhost:3000/posts';
-        })
-        .catch(error => console.error('Error:', error));
+    });
+    const jsonData = await data.json();
+    const user = jsonData.user;
+    window.location.href = 'http://localhost:3000/posts';
+    // .then(response => {
+    //     console.log(response.status);
+    //     const data = response.json();
+    //     console.log(data);
+    //     if (!response.ok) {
+    //         throw new Error(`${response.json().message}`);
+    //     }
+    //     return data;
+    // })
+    // .then(result => {
+    //     console.log(`message: ${result.message}, session: ${result.user}`);
+    //     window.location.href = 'http://localhost:3000/posts';
+    // })
+    // .catch(error => console.error('Error:', error));
 };

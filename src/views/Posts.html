@@ -18,13 +18,9 @@
                         src="/public/images/profile_img.webp"
                     />
                     <div class="dropdown" id="dropdown">
-                        <a href="http://localhost:3000/users/:userId/user"
-                            >회원정보수정</a
-                        >
-                        <a href="http://localhost:3000/users/:userId/passwd"
-                            >비밀번호수정</a
-                        >
-                        <a href="http://localhost:3000/auth/login">로그아웃</a>
+                        <a id="modifyUserInfoLink">회원정보수정</a>
+                        <a id="modifyPasswdLink">비밀번호수정</a>
+                        <a id="logoutLink">로그아웃</a>
                     </div>
                 </div>
             </header>
@@ -41,38 +37,7 @@
                         게시글 작성
                     </button>
                 </div>
-                <article class="postContentArea" id="postContentArea">
-                    <!-- <div class="postContentDiv" id="1">
-                        <h3 class="postTitle" id="postTitle">제목 1</h3>
-                        <div class="listAndTime">
-                            <ul class="socialList">
-                                <li class="socialListTxt" id="like">
-                                    좋아요 0
-                                </li>
-                                <li class="socialListTxt" id="comment">
-                                    댓글 0
-                                </li>
-                                <li class="socialListTxt" id="view">
-                                    조회수 0
-                                </li>
-                            </ul>
-                            <p class="time" id="time">2024.10.28 07:04:00</p>
-                        </div>
-                        <hr class="postHorizontal-rule" />
-                        <div class="editor">
-                            <div class="profileImgBox">
-                                <img
-                                    class="profileImg"
-                                    id="profileImg"
-                                    src="/public/images/profile_img.webp"
-                                />
-                            </div>
-                            <p class="editorNickname" id="editorNickname">
-                                작성자 1
-                            </p>
-                        </div>
-                    </div> -->
-                </article>
+                <article class="postContentArea" id="postContentArea"></article>
             </article>
         </section>
         <script src="/public/js/post.js"></script>

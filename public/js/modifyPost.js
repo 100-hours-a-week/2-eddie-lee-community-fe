@@ -6,6 +6,9 @@ const postForm = document.getElementById('postForm');
 const inputTitle = document.getElementById('inputTitle');
 const inputContent = document.getElementById('inputContent');
 const inputImg = document.getElementById('inputImg');
+const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
+const modifyPasswdLink = document.getElementById('modifyPasswdLink');
+const logoutLink = document.getElementById('logoutLink');
 
 let userId = '';
 
@@ -30,6 +33,10 @@ document.addEventListener('DOMContentLoaded', async (req, res) => {
 
     const url = window.location.pathname;
     const postId = url.split('/')[2];
+
+    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
+    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
+    logoutLink.href = 'http://localhost:3000/auth/login';
 
     try {
         const resPostData = await fetch(

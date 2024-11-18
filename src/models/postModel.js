@@ -44,8 +44,8 @@ export const getComments = async (req, res) => {
         res.status(200).json(comments);
     } else {
         res.status(404).json({
-            result: 'Not Found',
-            message: "Can't get comments",
+            message: 'get_comments_failed',
+            data: null,
         });
     }
 };
