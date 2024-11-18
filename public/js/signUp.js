@@ -1,34 +1,34 @@
-let profilePhoto = document.getElementById('profilePhoto');
-let inputEmail = document.getElementById('inputEmail');
-let inputPasswd = document.getElementById('inputPasswd');
-let recheckPasswd = document.getElementById('recheckPasswd');
-let inputNickname = document.getElementById('inputNickname');
-let signupForm = document.getElementById('signupForm');
-let signupBtn = document.getElementById('signupBtn');
-let noInputEmail = document.getElementById('noInputEmail');
-let invalidEmail = document.getElementById('invalidEmail');
-let dupEmail = document.getElementById('dupEmail');
-let noInputPasswd = document.getElementById('noInputPasswd');
-let diffPasswd = document.getElementById('diffPasswd');
-let noInputRecheckPasswd = document.getElementById('noInputRecheckPasswd');
-let diffRecheckPasswd = document.getElementById('diffRecheckPasswd');
-let noInputNickname = document.getElementById('noInputNickname');
-let includeSpaceNickname = document.getElementById('includeSpaceNickname');
-let dupNickname = document.getElementById('dupNickname');
-let tooLongNickname = document.getElementById('tooLongNickname');
-let profileImg = document.getElementById('profileImg');
-let loginBtn = document.getElementById('loginBtn');
+const profilePhoto = document.getElementById('profilePhoto');
+const inputEmail = document.getElementById('inputEmail');
+const inputPasswd = document.getElementById('inputPasswd');
+const recheckPasswd = document.getElementById('recheckPasswd');
+const inputNickname = document.getElementById('inputNickname');
+const signupForm = document.getElementById('signupForm');
+const signupBtn = document.getElementById('signupBtn');
+const noInputEmail = document.getElementById('noInputEmail');
+const invalidEmail = document.getElementById('invalidEmail');
+const dupEmail = document.getElementById('dupEmail');
+const noInputPasswd = document.getElementById('noInputPasswd');
+const diffPasswd = document.getElementById('diffPasswd');
+const noInputRecheckPasswd = document.getElementById('noInputRecheckPasswd');
+const diffRecheckPasswd = document.getElementById('diffRecheckPasswd');
+const noInputNickname = document.getElementById('noInputNickname');
+const includeSpaceNickname = document.getElementById('includeSpaceNickname');
+const dupNickname = document.getElementById('dupNickname');
+const tooLongNickname = document.getElementById('tooLongNickname');
+const profileImg = document.getElementById('profileImg');
+const loginBtn = document.getElementById('loginBtn');
 
 const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwdPattern =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
 const nicknamePattern = /^\S{1,10}$/;
 
-let emailValid = function (email) {
+const emailValid = function (email) {
     return emailPattern.test(email.value);
 };
 
-let passwdValid = function (passwd, recheckPasswd) {
+const passwdValid = function (passwd, recheckPasswd) {
     if (passwd.value === recheckPasswd.value) {
         return passwdPattern.test(passwd.value);
     } else {
@@ -36,15 +36,15 @@ let passwdValid = function (passwd, recheckPasswd) {
     }
 };
 
-let nicknameValid = function (nickname) {
+const nicknameValid = function (nickname) {
     return nicknamePattern.test(inputNickname.value);
 };
 
-let addHide = function (elementID) {
+const addHide = function (elementID) {
     elementID.classList.add('hide');
 };
 
-let removeHide = function (elementID) {
+const removeHide = function (elementID) {
     elementID.classList.remove('hide');
 };
 
@@ -184,18 +184,22 @@ signupForm.onsubmit = async event => {
     event.preventDefault();
 
     const formData = new FormData(signupForm);
-    let originPasswd = formData.get('passwd');
+    const originPasswd = formData.get('passwd');
     formData.set('passwd', btoa(originPasswd));
 
     await fetch('/auth/signup', {
         method: 'POST',
         body: formData,
     })
-        .then(res => res.text())
-        .then(data => console.log(data))
+        .then(res => {
+            const data = res.text();
+            if (res.ok) {
+                window.location.href = 'http://localhost:3000/auth/login';
+            } else {
+                throw new Error(`sign up failed..`);
+            }
+        })
         .catch(error => console.error('Error:', error));
-
-    window.location.href = 'http://localhost:3000/auth/login';
 };
 
 loginBtn.onclick = () => {

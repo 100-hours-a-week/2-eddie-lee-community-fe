@@ -13,10 +13,9 @@ const toast = document.getElementById('toast');
 const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
 const modifyPasswdLink = document.getElementById('modifyPasswdLink');
 const logoutLink = document.getElementById('logoutLink');
+const passwdModifyForm = document.getElementById('passwdModifyForm');
 
-modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
-modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
-logoutLink.href = 'http://localhost:3000/auth/login';
+let userId = '';
 
 const passwdPattern =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
@@ -55,9 +54,32 @@ const activateBtn = () => {
     modifyBtn.disabled = false;
 };
 
+document.addEventListener('DOMContentLoaded', async (req, res) => {
+    //session에서 user data 받아오기
+    await fetch('http://localhost:3000/users/data', {
+        method: 'GET',
+        credentials: 'include',
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('User data not exist');
+            }
+            return res.json();
+        })
+        .then(userData => {
+            const user = userData.user;
+            userProfile.src = user.userProfileImg;
+            userId = user.userId;
+        })
+        .catch(error => console.error(error));
+
+    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
+    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
+    logoutLink.href = 'http://localhost:3000/auth/login';
+});
+
 inputPasswd.onkeyup = () => {
     changeBtnColor;
-    console.log(inputRecheckPasswd);
     if (inputPasswd.value.length === 0) {
         removeHide(inputPasswdHelperText);
         addHide(inputPasswdInvalidHelperText);
@@ -95,9 +117,28 @@ inputRecheckPasswd.onkeyup = () => {
     }
 };
 
-modifyBtn.onclick = event => {
+modifyBtn.onclick = async event => {
     event.preventDefault();
-    createToast();
+    const formData = new FormData(passwdModifyForm);
+    const originPasswd = formData.get('modifyPassword');
+    formData.set('modifyPassword', btoa(originPasswd));
+    try {
+        const reqData = await fetch(
+            `http://localhost:3000/users/${userId}/passwd`,
+            {
+                method: 'PATCH',
+                body: formData,
+            },
+        );
+        if (reqData.ok) {
+            const data = await reqData.json();
+            location.href = 'http://localhost:3000/auth/login';
+        } else {
+            throw new Error(`passwd modify failed..`);
+        }
+    } catch (err) {
+        console.error(err.message);
+    }
 };
 
 usrProfileBox.onclick = function () {

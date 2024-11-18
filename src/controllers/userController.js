@@ -133,7 +133,40 @@ export const modifyUser = async (req, res) => {
     }
     res.status(200).json({ message: 'modify_user_info_success', data: null });
 };
-export const modifyUserPasswd = async (req, res) => {};
+export const modifyUserPasswd = async (req, res) => {
+    const userId = req.params.userId;
+    const textData = req.body;
+    const passwd = textData.modifyPassword;
+    try {
+        const getUserData = await fetch('http://localhost:3000/data/users');
+        const userData = await getUserData.json();
+        const updateUsers = userData.map(user =>
+            user.user_id === userId ? { ...user, passwd: passwd } : user,
+        );
+
+        try {
+            fs.writeFileSync(
+                `${rootDirname}/public/dummyData/userDummyData.json`,
+                JSON.stringify(updateUsers),
+                'utf8',
+            );
+            res.status(200).json({
+                message: 'modify_passwd_success',
+                data: null,
+            });
+        } catch (error) {
+            res.status(404).json({
+                message: 'write file err',
+                data: error.message,
+            });
+        }
+    } catch (err) {
+        res.status(404).json({
+            message: 'modify passwd failed',
+            data: err.message,
+        });
+    }
+};
 
 //DELETE
 export const deleteUser = async (req, res) => {

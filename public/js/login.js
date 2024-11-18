@@ -54,21 +54,9 @@ loginForm.onsubmit = async function (event) {
         method: 'POST',
         body: formData,
     });
-    const jsonData = await data.json();
-    const user = jsonData.user;
-    window.location.href = 'http://localhost:3000/posts';
-    // .then(response => {
-    //     console.log(response.status);
-    //     const data = response.json();
-    //     console.log(data);
-    //     if (!response.ok) {
-    //         throw new Error(`${response.json().message}`);
-    //     }
-    //     return data;
-    // })
-    // .then(result => {
-    //     console.log(`message: ${result.message}, session: ${result.user}`);
-    //     window.location.href = 'http://localhost:3000/posts';
-    // })
-    // .catch(error => console.error('Error:', error));
+    if (data.ok) {
+        const jsonData = await data.json();
+        const user = jsonData.user;
+        window.location.href = 'http://localhost:3000/posts';
+    }
 };

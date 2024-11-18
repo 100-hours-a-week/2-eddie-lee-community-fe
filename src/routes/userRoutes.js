@@ -26,7 +26,11 @@ userRouter.patch(
     upload.single('profileImg'),
     userController.modifyUser,
 );
-userRouter.patch('/:userId/passwd', userController.modifyUserPasswd);
+userRouter.patch(
+    '/:userId/passwd',
+    upload.none(),
+    userController.modifyUserPasswd,
+);
 
 //DELETE
 userRouter.delete('/:userId/user', userController.deleteUser);
