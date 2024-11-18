@@ -65,9 +65,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const url = window.location.pathname;
     const postId = url.split('/')[2];
 
-    const getData = await fetch(`http://localhost:3000/data/posts/${postId}`);
-    const postData = await getData.json();
-    console.log(postData);
+    //조회 수 증가
+    await fetch(`http://localhost:3000/posts/${postId}/view`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(res => {
+            if (res.ok) {
+                console.log(
+                    `status code: ${res.status}, message: ${res.json()}`,
+                );
+            } else {
+                console.error(
+                    `status code: ${res.status}, message: ${res.json()}`,
+                );
+            }
+        })
+        .catch(err => console.error(err));
+    const postData = await fetch(`http://localhost:3000/data/posts/${postId}`)
+        .then(res => res.json())
+        .catch(err => console.error(err));
     const getUserData = await fetch(
         `http://localhost:3000/public/dummyData/userDummyData.json`,
     )
@@ -82,6 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return user;
         })
         .catch(error => console.error(error));
+
     postTitle.textContent = postData.title;
     profileImg.src = postData.profile_img;
     editorNickname.textContent = postData.nickname;
@@ -126,6 +146,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     let like = postData.like;
     let view = postData.view;
     let comment = postData.comment_count;
+
+    likeBtnEventListener(postId);
 
     likeCount.textContent = numericalPrefix(like);
 
@@ -220,6 +242,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 commentModal.style.display = 'none';
                 commentModalBox.style.display = 'none';
 
+                const post = fetch(`http://localhost:3000/data/posts/${postId}`)
+                    .then(async res => {
+                        const data = await res.json();
+                        if (res.ok) {
+                            commentCount.textContent = numericalPrefix(
+                                data.comment_count,
+                            );
+                        } else {
+                            console.error(data);
+                        }
+                    })
+                    .catch(error => console.error(error));
                 window.location.reload();
             };
         }
@@ -261,8 +295,29 @@ addCommentBtn.onclick = () => {
             'Content-Type': 'application/json',
         },
     })
-        .then(req => req.json())
-        .then(data => console.log(data));
+        .then(async res => {
+            const statusCode = res.status;
+            const resData = await res.json();
+            if (res.ok) {
+                console.log(`Status Code: ${statusCode}, ResData: ${resData}`);
+            } else {
+                console.error(
+                    `Status Code: ${statusCode}, ResData: ${resData}`,
+                );
+            }
+        })
+        .catch(err => console.error('Network Error: ', err));
+
+    const post = fetch(`http://localhost:3000/data/posts/${postId}`)
+        .then(async res => {
+            const data = await res.json();
+            if (res.ok) {
+                commentCount.textContent = numericalPrefix(data.comment_count);
+            } else {
+                console.error(data);
+            }
+        })
+        .catch(error => console.error(error));
     window.location.reload();
 };
 
@@ -289,13 +344,27 @@ async function patchComment(commentData) {
     window.location.reload();
 }
 
-likeBtn.onclick = () => {
-    //좋아요 수가 늘어났을 때 다시 저장하는 부분 아직 안만들었음
-    let like = parseInt(likeCount.textContent);
-    console.log(likeCount.textContent);
-    if (++like >= 1000) {
-        like /= 1000;
-        likeCount.textContent = `${like}k`;
-    }
-    console.log(like);
-};
+async function likeBtnEventListener(postId) {
+    likeBtn.addEventListener('click', async function () {
+        await fetch(`http://localhost:3000/posts/${postId}/like`, {
+            method: 'PATCH',
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`like is not a number, like: ${data.like}`);
+                }
+            })
+            .catch(err => console.error(err));
+
+        const post = fetch(`http://localhost:3000/data/posts/${postId}`)
+            .then(async res => {
+                const data = await res.json();
+                if (res.ok) {
+                    likeCount.textContent = numericalPrefix(data.like);
+                } else {
+                    console.error(data);
+                }
+            })
+            .catch(error => console.error(error));
+    });
+}

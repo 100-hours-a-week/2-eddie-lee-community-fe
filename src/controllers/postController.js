@@ -1,8 +1,7 @@
 import { viewDirname, rootDirname } from '../routes/index.js';
 import fs from 'fs';
 
-const postFilePath =
-    'http://localhost:3000/public/dummyData/postDummyData.json';
+const postFilePath = 'http://localhost:3000/data/posts';
 
 //timestamp
 function formatTimestamp(timestamp) {
@@ -88,7 +87,6 @@ export const getCommentData = async (req, res) => {
 //POST
 export const getPostList = async (req, res) => {
     const offset = req.body.offset;
-    console.log(offset);
     let postArr = [];
     const postList = await fetch(postFilePath)
         .then(res => res.json())
@@ -125,7 +123,7 @@ export const editPost = async (req, res) => {
         findUser => findUser.user_id == postData.userId,
     );
     const postObj = {
-        user_id: postData.user_id,
+        user_id: postData.userId,
         post_id: Date.now().toString(),
         profile_img: user.profile_img,
         nickname: user.nickname,
@@ -165,7 +163,6 @@ export const editComment = async (req, res) => {
         .then(res => res.json())
         .then(users => {
             const user = users.find(user => user.user_id === userId);
-            console.log(user);
             return user;
         })
         .catch(error => console.error(`데이터 가져오기 에러${error}`));
@@ -178,7 +175,6 @@ export const editComment = async (req, res) => {
         timestamp: formatTimestamp(Date.now()),
         comment_content: comment,
     };
-    console.log(newComment);
     let originCommentFile = await fetch(
         'http://localhost:3000/public/dummyData/commentDummyData.json',
     )
@@ -191,6 +187,24 @@ export const editComment = async (req, res) => {
             `${rootDirname}/public/dummyData/commentDummyData.json`,
             JSON.stringify(originCommentFile),
         );
+        //댓글 개수 증가
+        await fetch(`http://localhost:3000/posts/${postId}/comment`, {
+            method: 'PATCH',
+            body: JSON.stringify({ addOrReduce: 'add' }),
+            headers: { 'Content-Type': 'application/json' },
+        })
+            .then(async res => {
+                const statusCode = res.status;
+                const resData = await res.json();
+                if (res.ok) {
+                    console.log(`status code: ${statusCode}, data: ${resData}`);
+                } else {
+                    console.error(
+                        `status code: ${statusCode}, data: ${resData}`,
+                    );
+                }
+            })
+            .catch(err => console.error(err));
         res.status(200).json({
             message: 'Data add complete',
             data: newComment,
@@ -274,7 +288,168 @@ export const modifyComment = async (req, res) => {
     }
 };
 
+export const updateView = async (req, res) => {
+    const postId = req.params.postId;
+    let error = '';
+    try {
+        const updatePosts = await fetch(`http://localhost:3000/data/posts`)
+            .then(res => res.json())
+            .then(posts => {
+                const modifyPosts = posts.map(post =>
+                    post.post_id === postId
+                        ? { ...post, view: ++post.view }
+                        : post,
+                );
+
+                return modifyPosts;
+            })
+            .catch(err => {
+                console.error(err);
+                error = {
+                    result: 'Get all post failed..',
+                    message: err.message,
+                };
+            });
+
+        try {
+            fs.writeFileSync(
+                `${rootDirname}/public/dummyData/postDummyData.json`,
+                JSON.stringify(updatePosts),
+                'utf8',
+            );
+        } catch (err) {
+            throw new Error(`File write err: ${err.message}`);
+        }
+
+        res.status(200).json({ result: 'Update view complete', message: null });
+    } catch (err) {
+        res.status(404).json({
+            result: 'Update view failed..',
+            message: err.message,
+        });
+    }
+};
+
+export const updateCommentCount = async (req, res) => {
+    const postId = req.params.postId;
+    const { addOrReduce } = req.body;
+    const posts = await fetch('http://localhost:3000/data/posts')
+        .then(async res => {
+            const data = await res.json();
+            let updateCommentCounts;
+            if (res.ok) {
+                switch (addOrReduce) {
+                    case 'add':
+                        updateCommentCounts = data.map(post =>
+                            post.post_id === postId
+                                ? {
+                                      ...post,
+                                      comment_count: ++post.comment_count,
+                                  }
+                                : post,
+                        );
+                        break;
+                    case 'reduce':
+                        updateCommentCounts = data.map(post =>
+                            post.post_id === postId
+                                ? {
+                                      ...post,
+                                      comment_count: --post.comment_count,
+                                  }
+                                : post,
+                        );
+                        break;
+                    default:
+                        res.status(404).json({
+                            result: 'update comment count failed..',
+                            message: 'add or reduce failed..',
+                        });
+                        break;
+                }
+                return updateCommentCounts;
+            }
+        })
+        .catch(error => console.error(error));
+
+    try {
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/postDummyData.json`,
+            JSON.stringify(posts),
+            'utf8',
+        );
+        res.status(200).json({
+            result: 'update comment count success',
+            message: null,
+        });
+    } catch (err) {
+        res.status(404).json({
+            result: 'update comment count failed..',
+            message: err,
+        });
+    }
+};
+
+export const updateLike = async (req, res) => {
+    const postId = req.params.postId;
+    try {
+        const updatePosts = await fetch(`http://localhost:3000/data/posts`)
+            .then(res => res.json())
+            .then(posts => {
+                const modifyPosts = posts.map(post =>
+                    post.post_id === postId
+                        ? { ...post, like: ++post.like }
+                        : post,
+                );
+
+                return modifyPosts;
+            })
+            .catch(err => {
+                console.error(err);
+                error = {
+                    result: 'Get all post failed..',
+                    message: err.message,
+                };
+            });
+
+        try {
+            fs.writeFileSync(
+                `${rootDirname}/public/dummyData/postDummyData.json`,
+                JSON.stringify(updatePosts),
+                'utf8',
+            );
+        } catch (err) {
+            throw new Error(`File write err: ${err.message}`);
+        }
+
+        res.status(200).json({ result: 'Update view complete', message: null });
+    } catch (err) {
+        res.status(404).json({
+            result: 'Update view failed..',
+            message: err.message,
+        });
+    }
+};
+
 //DELETE
+export const deletePost = async (req, res) => {
+    const postId = req.params.postId;
+    const posts = await fetch('http://localhost:3000/data/posts')
+        .then(res => res.json())
+        .catch(error => console.error(error));
+    const deletePosts = posts.filter(post => post.post_id != postId);
+
+    try {
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/postDummyData.json`,
+            JSON.stringify(deletePosts),
+            'utf8',
+        );
+        res.status(200).json({ result: '게시물 삭제 성공', message: null });
+    } catch (error) {
+        res.status(404).json({ result: '게시물 삭제 실패', message: error });
+    }
+};
+
 export const deleteComment = async (req, res) => {
     const postId = req.params.postId;
     const commentId = req.params.commentId;
@@ -290,6 +465,24 @@ export const deleteComment = async (req, res) => {
             `${rootDirname}/public/dummyData/commentDummyData.json`,
             JSON.stringify(deleteComments),
         );
+        //댓글 개수 감소
+        await fetch(`http://localhost:3000/posts/${postId}/comment`, {
+            method: 'PATCH',
+            body: JSON.stringify({ addOrReduce: 'reduce' }),
+            headers: { 'Content-Type': 'application/json' },
+        })
+            .then(async res => {
+                const statusCode = res.status;
+                const resData = await res.json();
+                if (res.ok) {
+                    console.log(`status code: ${statusCode}, data: ${resData}`);
+                } else {
+                    console.error(
+                        `status code: ${statusCode}, data: ${resData}`,
+                    );
+                }
+            })
+            .catch(err => console.error(err));
         res.status(200).json({
             message: 'Data delete complete',
             data: req.body,

@@ -11,7 +11,7 @@ export const getAllPostData = async (req, res) => {
         } catch (e) {
             res.status(404).json({
                 result: '전체 게시글 데이터 가져오기 실패',
-                message: e,
+                message: e.message,
             });
         }
     }
@@ -54,13 +54,23 @@ export const getSpecificPostData = async (req, res) => {
     try {
         const postId = req.params.postId;
         const getPostData = await fetch(`http://localhost:3000/data/posts`);
+        if (!getPostData.ok) {
+            throw new Error(`Failed to fetch posts: ${getPostData.statusText}`);
+        }
         const postData = await getPostData.json();
         const specificPost = postData.find(post => post.post_id === postId);
-        res.json(specificPost);
+        if (specificPost !== undefined) {
+            res.json(specificPost);
+        } else {
+            res.status(404).json({
+                result: 'Not Found',
+                message: "Can't get post",
+            });
+        }
     } catch (e) {
         res.status(404).json({
             result: '게시물 정보 가져오기 실패',
-            message: e,
+            message: e.message,
         });
     }
 };

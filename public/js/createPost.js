@@ -7,7 +7,7 @@ let dropdown = document.getElementById('dropdown');
 let postForm = document.getElementById('postForm');
 
 document.addEventListener('DOMContentLoaded', async () => {
-    let userId = 0;
+    let userId = '';
     await fetch('http://localhost:3000/users/data', {
         method: 'GET',
         credentials: 'include',
@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     userIdInput.type = 'hidden';
     userIdInput.name = 'userId';
     userIdInput.value = userId;
+    console.log(userId);
     postForm.appendChild(userIdInput);
 });
 
