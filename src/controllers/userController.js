@@ -136,4 +136,61 @@ export const modifyUser = async (req, res) => {
 export const modifyUserPasswd = async (req, res) => {};
 
 //DELETE
-export const deleteUser = async (req, res) => {};
+export const deleteUser = async (req, res) => {
+    const userId = req.params.userId;
+    const comments = await fetch('http://localhost:3000/data/comments')
+        .then(res => res.json())
+        .catch(error => console.error(error));
+    const deleteComments = comments.filter(
+        comment => comment.user_id != userId,
+    );
+    try {
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/commentDummyData.json`,
+            JSON.stringify(deleteComments),
+            'utf8',
+        );
+    } catch (err) {
+        res.status(404).json({
+            result: '사용자 삭제 실패: 댓글 삭제 실패',
+            message: err.message,
+        });
+    }
+
+    const posts = await fetch('http://localhost:3000/data/posts')
+        .then(res => res.json())
+        .catch(error => console.error(error));
+    const deletePosts = posts.filter(post => post.user_id != userId);
+    try {
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/postDummyData.json`,
+            JSON.stringify(deletePosts),
+            'utf8',
+        );
+    } catch (err) {
+        res.status(404).json({
+            result: '사용자 삭제 실패: 게시글 삭제 실패',
+            message: err.message,
+        });
+    }
+
+    const users = await fetch('http://localhost:3000/data/users')
+        .then(res => res.json())
+        .catch(error => console.error(error));
+    const deleteUser = users.filter(user => user.user_id != userId);
+
+    try {
+        fs.writeFileSync(
+            `${rootDirname}/public/dummyData/userDummyData.json`,
+            JSON.stringify(deleteUser),
+            'utf8',
+        );
+    } catch (err) {
+        res.status(404).json({
+            result: '사용자 삭제 실패: 사용자 삭제 실패',
+            message: err.message,
+        });
+    }
+
+    res.status(200).json({ result: '사용자 삭제 성공', message: null });
+};
