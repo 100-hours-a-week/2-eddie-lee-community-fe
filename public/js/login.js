@@ -1,3 +1,6 @@
+import config from '../config.js';
+
+const baseURL = config.BASE_URL;
 const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwdPattern =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
@@ -20,7 +23,7 @@ let checkValid = function (inputEmail, inputPasswd) {
 
 inputEmail.onkeyup = function () {
     // wrongEmail 클래스 요소 가져오기
-    let wrongEmail = document.getElementsByClassName('wrongEmail');
+    const wrongEmail = document.getElementsByClassName('wrongEmail');
 
     if (emailPattern.test(inputEmail.value)) {
         // HTMLCollection에서 첫 번째 요소 선택
@@ -48,15 +51,13 @@ loginForm.onsubmit = async function (event) {
 
     const formData = new FormData(loginForm);
 
-    let originPasswd = formData.get('passwd');
+    const originPasswd = formData.get('passwd');
     formData.set('passwd', btoa(originPasswd));
-    const data = await fetch('/auth/login', {
+    const data = await fetch(`${baseURL}/auth/login`, {
         method: 'POST',
         body: formData,
     });
     if (data.ok) {
-        const jsonData = await data.json();
-        const user = jsonData.user;
-        window.location.href = 'http://localhost:3000/posts';
+        window.location.href = `${config.FRONT_URL}/posts`;
     }
 };

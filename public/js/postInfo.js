@@ -1,3 +1,5 @@
+import config from '../config.js';
+
 const postModify = document.getElementById('postModify');
 const postDelete = document.getElementById('postDelete');
 const postModal = document.getElementById('postModal');
@@ -22,11 +24,13 @@ const timestamp = document.getElementById('timestamp');
 const postPhoto = document.getElementById('postPhoto');
 const postContent = document.getElementById('postContent');
 const userProfile = document.getElementById('userProfile');
-const modifyAndDeleteBtnBox = document.getElementById('modifyAndDeleteBtnBox');
 const modifyCommentBtn = document.getElementById('modifyCommentBtn');
 const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
 const modifyPasswdLink = document.getElementById('modifyPasswdLink');
 const logoutLink = document.getElementById('logoutLink');
+
+const backURL = config.BASE_URL;
+const frontURL = config.FRONT_URL;
 
 let userId = '';
 
@@ -47,29 +51,11 @@ const commentIsEmpty = commentLength => {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-    //session에서 user data 받아오기
-    await fetch('http://localhost:3000/users/data', {
-        method: 'GET',
-        credentials: 'include',
-    })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error('User data not exist');
-            }
-            return res.json();
-        })
-        .then(userData => {
-            const user = userData.user;
-            userProfile.src = user.userProfileImg;
-            userId = user.userId;
-        })
-        .catch(error => console.error(error));
-
     const url = window.location.pathname;
     const postId = url.split('/')[2];
 
-    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
-    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
+    modifyUserInfoLink.href = `${backURL}/users`;
+    modifyPasswdLink.href = `${backURL}/users/passwd`;
     logoutLink.href = 'http://localhost:3000/auth/login';
     //조회 수 증가
     await fetch(`http://localhost:3000/posts/${postId}/view`, {

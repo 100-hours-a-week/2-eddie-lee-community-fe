@@ -1,5 +1,9 @@
-import { viewDirname, rootDirname } from '../routes/index.js';
+import env from '../../config/dotenv.js';
 import fs from 'fs';
+import path from 'path';
+
+const rootDirname = env.ROOT_DIRECTORY;
+const viewDirname = `${rootDirname}/src/views`;
 
 const postFilePath = 'http://localhost:3000/data/posts';
 
@@ -28,6 +32,10 @@ export const viewCreatePost = async (req, res) => {
 
 export const viewPostInfo = async (req, res) => {
     res.sendFile(`${viewDirname}/postInfo.html`);
+};
+
+export const viewModifyPost = async (req, res) => {
+    res.sendFile(`${viewDirname}/modifyPost.html`);
 };
 
 export const resPostData = async (req, res) => {
@@ -67,10 +75,6 @@ export const getComments = async (req, res) => {
         });
 
     res.status(200).json(comments);
-};
-
-export const viewModifyPost = async (req, res) => {
-    res.sendFile(`${viewDirname}/modifyPost.html`);
 };
 
 export const getCommentData = async (req, res) => {

@@ -1,7 +1,11 @@
 import express from 'express';
-import { rootDirname } from '../routes/index.js';
 import * as userController from '../controllers/userController.js';
 import multer from 'multer';
+import env from '../../config/dotenv.js';
+import fs from 'fs';
+import path from 'path';
+
+const rootDirname = env.ROOT_DIRECTORY;
 const userProfileImg = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, `${rootDirname}/public/userPhotos`);

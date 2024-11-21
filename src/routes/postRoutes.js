@@ -1,7 +1,12 @@
 import express from 'express';
 import * as postController from '../controllers/postController.js';
-import { rootDirname } from '../routes/index.js';
 import multer from 'multer';
+import env from '../../config/dotenv.js';
+import fs from 'fs';
+import path from 'path';
+
+const rootDirname = env.ROOT_DIRECTORY;
+const viewDirname = `${rootDirname}/src/views`;
 const postImg = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, `${rootDirname}/public/postPhotos`);

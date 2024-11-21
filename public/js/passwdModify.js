@@ -120,8 +120,8 @@ inputRecheckPasswd.onkeyup = () => {
 modifyBtn.onclick = async event => {
     event.preventDefault();
     const formData = new FormData(passwdModifyForm);
-    const originPasswd = formData.get('modifyPassword');
-    formData.set('modifyPassword', btoa(originPasswd));
+    const originPasswd = formData.get('modifyPasswd');
+    formData.set('modifyPasswd', btoa(originPasswd));
     try {
         const reqData = await fetch(
             `http://localhost:3000/users/${userId}/passwd`,

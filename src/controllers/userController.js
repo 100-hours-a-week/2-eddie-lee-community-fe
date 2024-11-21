@@ -1,6 +1,9 @@
-import { viewDirname, rootDirname } from '../routes/index.js';
+import env from '../../config/dotenv.js';
 import fs from 'fs';
+import path from 'path';
 
+const rootDirname = env.ROOT_DIRECTORY;
+const viewDirname = `${rootDirname}/src/views`;
 //GET
 export const viewModifyUser = async (req, res) => {
     res.sendFile(`${viewDirname}/profileModify.html`);
