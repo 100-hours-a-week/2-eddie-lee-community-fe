@@ -56,6 +56,7 @@ loginForm.onsubmit = async function (event) {
     const data = await fetch(`${baseURL}/auth/login`, {
         method: 'POST',
         body: formData,
+        credentials: 'include',
     });
     if (data.ok) {
         window.location.href = `${config.FRONT_URL}/posts`;

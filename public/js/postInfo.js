@@ -32,8 +32,6 @@ const logoutLink = document.getElementById('logoutLink');
 const backURL = config.BASE_URL;
 const frontURL = config.FRONT_URL;
 
-let userId = '';
-
 const numericalPrefix = number => {
     if (number > 999) {
         return `${parseInt(number / 1000)}k`;
@@ -51,18 +49,27 @@ const commentIsEmpty = commentLength => {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const userData = await fetch(`${backURL}/users/session`, {
+        method: 'GET',
+        credentials: 'include',
+    }).then(async res => {
+        const data = await res.json();
+        if (res.ok) {
+            return data;
+        } else {
+            throw new Error(`Get session failed..`);
+        }
+    });
+    userProfile.src = userData.profile_img;
     const url = window.location.pathname;
     const postId = url.split('/')[2];
 
-    modifyUserInfoLink.href = `${backURL}/users`;
-    modifyPasswdLink.href = `${backURL}/users/passwd`;
-    logoutLink.href = 'http://localhost:3000/auth/login';
+    modifyUserInfoLink.href = `${frontURL}/users/`;
+    modifyPasswdLink.href = `${frontURL}/users/passwd`;
+    logoutLink.href = `${frontURL}/auth/login`;
     //조회 수 증가
-    await fetch(`http://localhost:3000/posts/${postId}/view`, {
+    await fetch(`${backURL}/posts/${postId}/view`, {
         method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-        },
     })
         .then(res => {
             if (res.ok) {
@@ -76,29 +83,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         })
         .catch(err => console.error(err));
-    const postData = await fetch(`http://localhost:3000/data/posts/${postId}`)
-        .then(res => res.json())
-        .catch(err => console.error(err));
-    const getUserData = await fetch(
-        `http://localhost:3000/public/dummyData/userDummyData.json`,
-    )
-        .then(res => {
-            if (!res.ok) {
-                throw Error('get data error');
+    const postData = await fetch(`${backURL}/data/posts/${postId}`)
+        .then(async res => {
+            data = await res.json();
+            if (res.ok) {
+                return data;
+            } else {
+                throw new Error(`Get post data failed..`);
             }
-            return res.json();
         })
-        .then(users => {
-            const user = users.find(user => user.user_id === postData.user_id);
-            return user;
-        })
-        .catch(error => console.error(error));
+        .catch(err => console.error(err));
 
     postTitle.textContent = postData.title;
     profileImg.src = postData.profile_img;
     editorNickname.textContent = postData.nickname;
     timestamp.textContent = postData.timestamp;
-    if (userId !== postData.user_id) {
+    if (userData.user_id !== postData.user_id) {
         postModify.style.display = 'none';
         postDelete.style.display = 'none';
     } else {
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const parts = path.split('/');
             const postId = parts[2];
 
-            location.href = `http://localhost:3000/posts/${postId}`;
+            location.href = `${frontURL}/posts/${postId}`;
         };
         postDelete.onclick = function () {
             postModal.style.display = 'flex';
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             postModalBox.style.display = 'none';
         };
         postModalOk.onclick = async function () {
-            await fetch(`http://localhost:3000/posts/${postId}`, {
+            await fetch(`${backURL}/posts/${postId}`, {
                 method: 'DELETE',
             })
                 .then(res => res.json())
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             commentModal.style.display = 'none';
             commentModalBox.style.display = 'none';
 
-            location.href = 'http://localhost:3000/posts';
+            location.href = `${frontURL}/posts`;
         };
     }
 
@@ -147,9 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     commentCount.textContent = numericalPrefix(comment);
 
-    const getComments = await fetch(
-        `http://localhost:3000/posts/${postId}/comments`,
-    )
+    const getComments = await fetch(`${backURL}/posts/${postId}/comments`)
         .then(res => res.json())
         .catch(error => console.error(error));
     //여기도 offset으로 infinite scroll 구현해보기 (추가)
@@ -202,7 +200,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             commentEditorBox.appendChild(btnBox);
             modifyBtn.onclick = async () => {
                 const commentData = await fetch(
-                    `http://localhost:3000/posts/${postId}/comments/${comment.comment_id}`,
+                    `${backURL}/posts/${postId}/comments/${comment.comment_id}`,
                 )
                     .then(res => res.json())
                     .catch(error => console.error(error));
@@ -222,7 +220,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
             commentModalOk.onclick = async () => {
                 await fetch(
-                    `http://localhost:3000/posts/${postId}/comments/${comment.comment_id}`,
+                    `${backURL}/posts/${postId}/comments/${comment.comment_id}`,
                     {
                         method: 'DELETE',
                     },
@@ -234,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 commentModal.style.display = 'none';
                 commentModalBox.style.display = 'none';
 
-                const post = fetch(`http://localhost:3000/data/posts/${postId}`)
+                const post = fetch(`${backURL}/data/posts/${postId}`)
                     .then(async res => {
                         const data = await res.json();
                         if (res.ok) {
@@ -279,8 +277,8 @@ addCommentBtn.onclick = () => {
     const path = window.location.pathname;
     const parts = path.split('/');
     const postId = parts[2];
-    const data = { userId: userId, comment: commentArea.value };
-    fetch(`http://localhost:3000/posts/${postId}/comment`, {
+    const data = { comment: commentArea.value };
+    fetch(`${backURL}/posts/${postId}/comment`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -300,7 +298,7 @@ addCommentBtn.onclick = () => {
         })
         .catch(err => console.error('Network Error: ', err));
 
-    const post = fetch(`http://localhost:3000/data/posts/${postId}`)
+    const post = fetch(`${backURL}/data/posts/${postId}`)
         .then(async res => {
             const data = await res.json();
             if (res.ok) {
@@ -319,7 +317,7 @@ async function patchComment(commentData) {
         await function () {
             commentData.comment_content = commentArea.value;
             fetch(
-                `http://localhost:3000/posts/${commentData.post_id}/comments/${commentData.comment_id}`,
+                `${backURL}/posts/${commentData.post_id}/comments/${commentData.comment_id}`,
                 {
                     method: 'PATCH',
                     body: JSON.stringify(commentData),
@@ -338,7 +336,7 @@ async function patchComment(commentData) {
 
 async function likeBtnEventListener(postId) {
     likeBtn.addEventListener('click', async function () {
-        await fetch(`http://localhost:3000/posts/${postId}/like`, {
+        await fetch(`${backURL}/posts/${postId}/like`, {
             method: 'PATCH',
         })
             .then(res => {
@@ -348,7 +346,7 @@ async function likeBtnEventListener(postId) {
             })
             .catch(err => console.error(err));
 
-        const post = fetch(`http://localhost:3000/data/posts/${postId}`)
+        const post = fetch(`${backURL}/data/posts/${postId}`)
             .then(async res => {
                 const data = await res.json();
                 if (res.ok) {

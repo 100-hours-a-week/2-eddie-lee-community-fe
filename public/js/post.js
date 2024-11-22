@@ -18,6 +18,19 @@ let contentsCount = 0;
 let userId = 0;
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const userData = await fetch(`${baseURL}/users/session`, {
+        method: 'GET',
+        credentials: 'include',
+    }).then(async res => {
+        const data = await res.json();
+        if (res.ok) {
+            return data;
+        } else {
+            throw new Error(`Get session failed..`);
+        }
+    });
+    userProfile.src = userData.profile_img;
+    const url = window.location.pathname;
     modifyUserInfoLink.href = `${frontURL}/users/`;
     modifyPasswdLink.href = `${frontURL}/users/passwd`;
     logoutLink.href = `${frontURL}/auth/login`;
