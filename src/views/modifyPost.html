@@ -15,7 +15,7 @@
         <section class="wrap">
             <header role="banner" class="banner">
                 <div class="goToLoginBox">
-                    <a href="'http://localhost:3000/auth/login">
+                    <a id="goBackLink">
                         <img
                             class="goToLoginImg"
                             src="/public/images/back_arrow.png"
@@ -59,13 +59,18 @@
                         rows="14"
                     ></textarea>
                     <label for="imputImg" class="inputLabel">이미지</label>
-                    <input type="file" id="inputImg" accept="image/*" />
+                    <input
+                        type="file"
+                        id="inputImg"
+                        name="inputImg"
+                        accept="image/*"
+                    />
                     <button type="submit" id="submitBtn" class="submitPost">
                         수정하기
                     </button>
                 </article>
             </form>
         </section>
-        <script src="/public/js/modifyPost.js"></script>
+        <script type="module" src="/public/js/modifyPost.js"></script>
     </body>
 </html>

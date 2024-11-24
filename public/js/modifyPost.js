@@ -1,3 +1,5 @@
+import config from '../config.js';
+
 const usrProfileBox = document.getElementById('usrProfileBox');
 const usrProfile = document.getElementById('usrProfile');
 const dropdown = document.getElementById('dropdown');
@@ -9,12 +11,14 @@ const inputImg = document.getElementById('inputImg');
 const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
 const modifyPasswdLink = document.getElementById('modifyPasswdLink');
 const logoutLink = document.getElementById('logoutLink');
+const goBackLink = document.getElementById('goBackLink');
 
-let userId = '';
+const backURL = config.BASE_URL;
+const frontURL = config.FRONT_URL;
 
 document.addEventListener('DOMContentLoaded', async (req, res) => {
     //session에서 user data 받아오기
-    await fetch('http://localhost:3000/users/data', {
+    const userData = await fetch(`${backURL}/users/session`, {
         method: 'GET',
         credentials: 'include',
     })
@@ -24,24 +28,19 @@ document.addEventListener('DOMContentLoaded', async (req, res) => {
             }
             return res.json();
         })
-        .then(userData => {
-            const user = userData.user;
-            userProfile.src = user.userProfileImg;
-            userId = user.userId;
-        })
         .catch(error => console.error(error));
-
+    userProfile.src = `${backURL}${userData.profile_img}`;
+    const userId = userData.user_id;
     const url = window.location.pathname;
     const postId = url.split('/')[2];
+    goBackLink.href = `${frontURL}/posts/${postId}/info`;
 
-    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
-    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
-    logoutLink.href = 'http://localhost:3000/auth/login';
+    modifyUserInfoLink.href = `${backURL}/users/${userId}/user`;
+    modifyPasswdLink.href = `${backURL}/users/${userId}/passwd`;
+    logoutLink.href = `${backURL}/auth/login`;
 
     try {
-        const resPostData = await fetch(
-            `http://localhost:3000/data/posts/${postId}`,
-        );
+        const resPostData = await fetch(`${backURL}/data/posts/${postId}`);
         const postData = await resPostData.json();
 
         inputTitle.value = postData.title;
@@ -70,7 +69,7 @@ postForm.onsubmit = async event => {
     const path = window.location.pathname;
     const parts = path.split('/');
     const postId = parts[2];
-    await fetch(`http://localhost:3000/posts/${postId}`, {
+    await fetch(`${backURL}/posts/${postId}`, {
         method: 'PATCH',
         body: formData,
     })
@@ -79,5 +78,5 @@ postForm.onsubmit = async event => {
             console.log(data);
         })
         .catch(error => console.error(error));
-    window.location.href = `http://localhost:3000/posts/${postId}/info`;
+    window.location.href = `${frontURL}/posts/${postId}/info`;
 };

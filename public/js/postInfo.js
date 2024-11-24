@@ -95,8 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .catch(err => console.error(err));
 
     postTitle.textContent = postData.title;
-    //프로필 이미지 경로 수정
-    profileImg.src = postData.profile_img;
+    profileImg.src = `${backURL}${postData.profile_img}`;
     editorNickname.textContent = postData.nickname;
     timestamp.textContent = postData.timestamp;
     if (userData.user_id !== postData.user_id) {
@@ -133,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    postPhoto.src = postData.image;
+    postPhoto.src = `${backURL}${postData.image}`;
     postContent.textContent = postData.content;
 
     let like = postData.like;
