@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error(`Get session failed..`);
         }
     });
-    userProfile.src = userData.profile_img;
+    userProfile.src = `${backURL}${userData.profile_img}`;
     const url = window.location.pathname;
     const postId = url.split('/')[2];
 
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .catch(err => console.error(err));
     const postData = await fetch(`${backURL}/data/posts/${postId}`)
         .then(async res => {
-            data = await res.json();
+            const data = await res.json();
             if (res.ok) {
                 return data;
             } else {
@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .catch(err => console.error(err));
 
     postTitle.textContent = postData.title;
+    //프로필 이미지 경로 수정
     profileImg.src = postData.profile_img;
     editorNickname.textContent = postData.nickname;
     timestamp.textContent = postData.timestamp;
@@ -180,7 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         commentEditorBox.appendChild(editorNickname);
         commentEditorBox.appendChild(time);
 
-        if (comment.user_id === userId) {
+        if (comment.user_id === userData.user_id) {
             const btnBox = document.createElement('div');
             btnBox.classList.add('modifyAndDeleteBtnBox');
 
@@ -231,19 +232,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 commentModal.style.display = 'none';
                 commentModalBox.style.display = 'none';
-
-                const post = fetch(`${backURL}/data/posts/${postId}`)
-                    .then(async res => {
-                        const data = await res.json();
-                        if (res.ok) {
-                            commentCount.textContent = numericalPrefix(
-                                data.comment_count,
-                            );
-                        } else {
-                            console.error(data);
-                        }
-                    })
-                    .catch(error => console.error(error));
                 window.location.reload();
             };
         }
@@ -273,12 +261,12 @@ usrProfileBox.onclick = function () {
     }
 };
 
-addCommentBtn.onclick = () => {
+addCommentBtn.onclick = async () => {
     const path = window.location.pathname;
     const parts = path.split('/');
     const postId = parts[2];
     const data = { comment: commentArea.value };
-    fetch(`${backURL}/posts/${postId}/comment`, {
+    await fetch(`${backURL}/posts/${postId}/comment`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -297,17 +285,6 @@ addCommentBtn.onclick = () => {
             }
         })
         .catch(err => console.error('Network Error: ', err));
-
-    const post = fetch(`${backURL}/data/posts/${postId}`)
-        .then(async res => {
-            const data = await res.json();
-            if (res.ok) {
-                commentCount.textContent = numericalPrefix(data.comment_count);
-            } else {
-                console.error(data);
-            }
-        })
-        .catch(error => console.error(error));
     window.location.reload();
 };
 
@@ -326,12 +303,19 @@ async function patchComment(commentData) {
                     },
                 },
             )
-                .then(res => res.json())
+                .then(async res => {
+                    const data = res.json();
+                    if (res.ok) {
+                        return data;
+                    } else {
+                        throw new Error('comment modify failed..');
+                    }
+                })
                 .then(data => console.log(data))
                 .catch(err => console.error(err));
+            window.location.reload();
         },
     );
-    window.location.reload();
 }
 
 async function likeBtnEventListener(postId) {

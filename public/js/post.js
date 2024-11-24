@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error(`Get session failed..`);
         }
     });
-    userProfile.src = userData.profile_img;
+    userProfile.src = `${baseURL}${userData.profile_img}`;
     const url = window.location.pathname;
     modifyUserInfoLink.href = `${frontURL}/users/`;
     modifyPasswdLink.href = `${frontURL}/users/passwd`;
