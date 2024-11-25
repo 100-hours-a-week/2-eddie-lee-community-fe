@@ -1,3 +1,5 @@
+import config from '../config.js';
+
 const modifyBtn = document.getElementById('modifyBtn');
 const toast = document.getElementById('toast');
 const deleteProfile = document.getElementById('deleteProfile');
@@ -18,7 +20,9 @@ const profileImg = document.getElementById('profileImg');
 const showEmail = document.getElementById('showEmail');
 
 const nicknamePattern = /^\S{1,10}$/;
-let userId = '';
+
+const backURL = config.BASE_URL;
+const frontURL = config.FRONT_URL;
 
 const nicknameValid = function (nickname) {
     return nicknamePattern.test(inputNickname.value);
@@ -44,7 +48,7 @@ const createToast = function () {
 
 document.addEventListener('DOMContentLoaded', async () => {
     //session에서 user data 받아오기
-    const userData = await fetch('http://localhost:3000/users/data', {
+    const userData = await fetch(`${backURL}/users/session`, {
         method: 'GET',
         credentials: 'include',
     })
@@ -54,20 +58,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             return res.json();
         })
-        .then(userData => {
-            const user = userData.user;
-            userProfile.src = user.userProfileImg;
-            userId = user.userId;
-            return user;
-        })
         .catch(error => console.error(error));
 
-    profileImg.src = userData.userProfileImg;
-    showEmail.value = userData.userEmail;
-    inputNickname.placeholder = userData.userNickname;
-    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
-    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
-    logoutLink.href = 'http://localhost:3000/auth/login';
+    profileImg.src = `${backURL}${userData.profile_img}`;
+    showEmail.value = userData.email;
+    inputNickname.placeholder = userData.nickname;
+    modifyUserInfoLink.href = `${frontURL}/users/`;
+    modifyPasswdLink.href = `${frontURL}/users/passwd`;
+    logoutLink.href = `${frontURL}/auth/login`;
 });
 
 modifyBtn.onclick = async (req, res) => {
@@ -97,12 +95,13 @@ modifyBtn.onclick = async (req, res) => {
         const editNickname = inputNickname.value;
         formData.append('profileImg', editImg);
         formData.append('nickname', editNickname);
-        await fetch(`http://localhost:3000/users/${userId}/user`, {
+        await fetch(`${backURL}/users`, {
             method: 'PATCH',
             body: formData,
         })
             .then(res => res.json())
-            .then(data => console.log(data));
+            .then(data => console.log(data))
+            .catch(err => console.error(err.message));
         createToast();
     }
 };
@@ -118,13 +117,13 @@ deleteProfileCancelBtn.onclick = function () {
 };
 
 deleteProfileOkBtn.onclick = async () => {
-    await fetch(`http://localhost:3000/users/${userId}/user`, {
+    await fetch(`${backURL}/users`, {
         method: 'DELETE',
     })
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            location.href = 'http://localhost:3000/auth/login';
+            location.href = `${backURL}/auth/login`;
         })
         .catch(err => console.error(err));
 };
