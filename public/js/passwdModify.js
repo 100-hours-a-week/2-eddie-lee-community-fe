@@ -1,3 +1,5 @@
+import config from '../config.js';
+
 const inputPasswd = document.getElementById('inputPasswd');
 const inputRecheckPasswd = document.getElementById('inputRecheckPasswd');
 const inputPasswdHelperText = document.getElementById('inputPasswdHelperText');
@@ -15,7 +17,8 @@ const modifyPasswdLink = document.getElementById('modifyPasswdLink');
 const logoutLink = document.getElementById('logoutLink');
 const passwdModifyForm = document.getElementById('passwdModifyForm');
 
-let userId = '';
+const backURL = config.BASE_URL;
+const frontURL = config.FRONT_URL;
 
 const passwdPattern =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
@@ -56,7 +59,7 @@ const activateBtn = () => {
 
 document.addEventListener('DOMContentLoaded', async (req, res) => {
     //session에서 user data 받아오기
-    await fetch('http://localhost:3000/users/data', {
+    const userData = await fetch(`${backURL}/users/session`, {
         method: 'GET',
         credentials: 'include',
     })
@@ -66,16 +69,12 @@ document.addEventListener('DOMContentLoaded', async (req, res) => {
             }
             return res.json();
         })
-        .then(userData => {
-            const user = userData.user;
-            userProfile.src = user.userProfileImg;
-            userId = user.userId;
-        })
         .catch(error => console.error(error));
-
-    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
-    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
-    logoutLink.href = 'http://localhost:3000/auth/login';
+    userProfile.src = `${backURL}${userData.profile_img}`;
+    const userId = userData.user_id;
+    modifyUserInfoLink.href = `${frontURL}/users`;
+    modifyPasswdLink.href = `${frontURL}/users/passwd`;
+    logoutLink.href = `${frontURL}/auth/login`;
 });
 
 inputPasswd.onkeyup = () => {
@@ -123,16 +122,13 @@ modifyBtn.onclick = async event => {
     const originPasswd = formData.get('modifyPasswd');
     formData.set('modifyPasswd', btoa(originPasswd));
     try {
-        const reqData = await fetch(
-            `http://localhost:3000/users/${userId}/passwd`,
-            {
-                method: 'PATCH',
-                body: formData,
-            },
-        );
+        const reqData = await fetch(`${backURL}/users/passwd`, {
+            method: 'PATCH',
+            body: formData,
+        });
         if (reqData.ok) {
             const data = await reqData.json();
-            location.href = 'http://localhost:3000/auth/login';
+            location.href = `${frontURL}/auth/login`;
         } else {
             throw new Error(`passwd modify failed..`);
         }
