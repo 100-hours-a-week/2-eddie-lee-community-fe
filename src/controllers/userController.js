@@ -1,8 +1,7 @@
-import env from '../../config/dotenv.js';
 import fs from 'fs';
-import path from 'path';
+import config from '../../public/config.js';
 
-const rootDirname = env.ROOT_DIRECTORY;
+const rootDirname = config.ROOT_DIRECTORY;
 const viewDirname = `${rootDirname}/src/views`;
 //GET
 export const viewModifyUser = async (req, res) => {

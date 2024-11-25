@@ -1,6 +1,7 @@
 import config from '../config.js';
 
-const baseURL = config.BASE_URL;
+const backURL = config.BASE_URL;
+const frontURL = config.FRONT_URL;
 const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwdPattern =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
@@ -53,12 +54,12 @@ loginForm.onsubmit = async function (event) {
 
     const originPasswd = formData.get('passwd');
     formData.set('passwd', btoa(originPasswd));
-    const data = await fetch(`${baseURL}/auth/login`, {
+    const data = await fetch(`${backURL}/auth/login`, {
         method: 'POST',
         body: formData,
         credentials: 'include',
     });
     if (data.ok) {
-        window.location.href = `${config.FRONT_URL}/posts`;
+        window.location.href = `${frontURL}/posts`;
     }
 };
