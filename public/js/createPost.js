@@ -85,6 +85,7 @@ postForm.onsubmit = event => {
     fetch(`${backURL}/posts/edit`, {
         method: 'POST',
         body: formData,
+        credentials: 'include',
     })
         .then(async res => {
             const data = await res.json();

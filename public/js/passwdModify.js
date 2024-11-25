@@ -125,6 +125,7 @@ modifyBtn.onclick = async event => {
         const reqData = await fetch(`${backURL}/users/passwd`, {
             method: 'PATCH',
             body: formData,
+            credentials: 'include',
         });
         if (reqData.ok) {
             const data = await reqData.json();

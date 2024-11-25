@@ -11,6 +11,7 @@ const deleteProfileModal = document.getElementById('deleteProfileModal');
 const deleteProfileModalBox = document.getElementById('deleteProfileModalBox');
 const dropdown = document.getElementById('dropdown');
 const usrProfileBox = document.getElementById('usrProfileBox');
+const userProfile = document.getElementById('userProfile');
 const inputNickname = document.getElementById('inputNickname');
 const noInputNickname = document.getElementById('noInputNickname');
 const includeSpaceNickname = document.getElementById('includeSpaceNickname');
@@ -60,8 +61,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         })
         .catch(error => console.error(error));
 
+    userProfile.src = `${backURL}${userData.profile_img}`;
     profileImg.src = `${backURL}${userData.profile_img}`;
-    showEmail.value = userData.email;
+    showEmail.textContent = userData.email;
     inputNickname.placeholder = userData.nickname;
     modifyUserInfoLink.href = `${frontURL}/users/`;
     modifyPasswdLink.href = `${frontURL}/users/passwd`;
@@ -98,6 +100,7 @@ modifyBtn.onclick = async (req, res) => {
         await fetch(`${backURL}/users`, {
             method: 'PATCH',
             body: formData,
+            credentials: 'include',
         })
             .then(res => res.json())
             .then(data => console.log(data))
@@ -119,11 +122,12 @@ deleteProfileCancelBtn.onclick = function () {
 deleteProfileOkBtn.onclick = async () => {
     await fetch(`${backURL}/users`, {
         method: 'DELETE',
+        credentials: 'include',
     })
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            location.href = `${backURL}/auth/login`;
+            location.href = `${frontURL}/auth/login`;
         })
         .catch(err => console.error(err));
 };

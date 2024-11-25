@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const profileImg = document.createElement('img');
         profileImg.classList.add('profileImg');
-        profileImg.src = comment.profile_img;
+        profileImg.src = `${backURL}${comment.profile_img}`;
 
         profileImgBox.appendChild(profileImg);
 
@@ -271,6 +271,7 @@ addCommentBtn.onclick = async () => {
         headers: {
             'Content-Type': 'application/json',
         },
+        credentials: 'include',
     })
         .then(async res => {
             const statusCode = res.status;
