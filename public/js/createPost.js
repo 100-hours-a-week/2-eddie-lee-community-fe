@@ -1,3 +1,5 @@
+import config from '../config.js';
+
 const submitBtn = document.getElementById('submitBtn');
 const inputTitle = document.getElementById('inputTitle');
 const inputContent = document.getElementById('inputContent');
@@ -9,9 +11,11 @@ const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
 const modifyPasswdLink = document.getElementById('modifyPasswdLink');
 const logoutLink = document.getElementById('logoutLink');
 
+const backURL = config.BASE_URL;
+const frontURL = config.FRONT_URL;
+
 document.addEventListener('DOMContentLoaded', async () => {
-    let userId = '';
-    await fetch('http://localhost:3000/users/data', {
+    const userData = await fetch(`${backURL}/users/session`, {
         method: 'GET',
         credentials: 'include',
     })
@@ -21,19 +25,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             return res.json();
         })
-        .then(userData => {
-            const user = userData.user;
-            userProfile.src = user.userProfileImg;
-            userId = user.userId;
-
-            console.log(
-                `user Profile : ${user.userProfileImg}, userId: ${user.userId}`,
-            );
-        })
         .catch(error => console.error(error));
-    modifyUserInfoLink.href = `http://localhost:3000/users/${userId}/user`;
-    modifyPasswdLink.href = `http://localhost:3000/users/${userId}/passwd`;
-    logoutLink.href = 'http://localhost:3000/auth/login';
+    userProfile.src = `${backURL}${userData.profile_img}`;
+    const userId = userData.user_id;
+    modifyUserInfoLink.href = `${frontURL}/users/`;
+    modifyPasswdLink.href = `${frontURL}/users/passwd`;
+    logoutLink.href = `${frontURL}/auth/login`;
     const userIdInput = document.createElement('input');
     userIdInput.type = 'hidden';
     userIdInput.name = 'userId';
@@ -83,16 +80,24 @@ usrProfileBox.onclick = function () {
 
 postForm.onsubmit = event => {
     event.preventDefault();
-    let formData = new FormData(postForm);
+    const formData = new FormData(postForm);
 
-    fetch('http://localhost:3000/posts/edit', {
+    fetch(`${backURL}/posts/edit`, {
         method: 'POST',
         body: formData,
     })
-        .then(res => res.text())
+        .then(async res => {
+            const data = await res.json();
+            if (res.ok) {
+                return data;
+            } else {
+                throw new Error(`create post error`);
+            }
+        })
         .then(data => {
             console.log(data);
-        });
+        })
+        .catch(err => console.error(err.message));
 
-    location.href = 'http://localhost:3000/posts';
+    location.href = `${frontURL}/posts`;
 };

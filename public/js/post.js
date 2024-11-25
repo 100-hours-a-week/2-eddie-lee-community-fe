@@ -105,7 +105,7 @@ async function getContents() {
 
         const profileImg = document.createElement('img');
         profileImg.classList.add('profileImg');
-        profileImg.src = postInfo.profile_img;
+        profileImg.src = `${baseURL}${postInfo.profile_img}`;
 
         profileImgBox.appendChild(profileImg);
 

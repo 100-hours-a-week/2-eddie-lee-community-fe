@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', async (req, res) => {
     const postId = url.split('/')[2];
     goBackLink.href = `${frontURL}/posts/${postId}/info`;
 
-    modifyUserInfoLink.href = `${backURL}/users/${userId}/user`;
-    modifyPasswdLink.href = `${backURL}/users/${userId}/passwd`;
-    logoutLink.href = `${backURL}/auth/login`;
+    modifyUserInfoLink.href = `${frontURL}/users/${userId}/user`;
+    modifyPasswdLink.href = `${frontURL}/users/${userId}/passwd`;
+    logoutLink.href = `${frontURL}/auth/login`;
 
     try {
         const resPostData = await fetch(`${backURL}/data/posts/${postId}`);
