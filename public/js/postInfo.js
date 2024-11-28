@@ -60,7 +60,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error(`Get session failed..`);
         }
     });
-    userProfile.src = `${backURL}${userData.profile_img}`;
+    userProfile.src = userData.profileImg
+        ? `${backURL}${userData.profileImg}`
+        : '/public/images/profile_img.webp';
     const url = window.location.pathname;
     const postId = url.split('/')[2];
 
@@ -83,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         })
         .catch(err => console.error(err));
-    const postData = await fetch(`${backURL}/data/posts/${postId}`)
+    const postData = await fetch(`${backURL}/posts/${postId}/data`)
         .then(async res => {
             const data = await res.json();
             if (res.ok) {
@@ -95,7 +97,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         .catch(err => console.error(err));
 
     postTitle.textContent = postData.title;
-    profileImg.src = `${backURL}${postData.profile_img}`;
+    profileImg.src = postData.profileImg
+        ? `${backURL}${postData.profileImg}`
+        : '/public/images/profile_img.webp';
     editorNickname.textContent = postData.nickname;
     timestamp.textContent = postData.timestamp;
     if (userData.user_id !== postData.user_id) {
@@ -132,7 +136,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    postPhoto.src = `${backURL}${postData.image}`;
+    postPhoto.src = postData.image
+        ? `${backURL}${postData.image}`
+        : '/public/images/defaultPostImg.png';
+
     postContent.textContent = postData.content;
 
     let like = postData.like;
@@ -154,7 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     getComments.forEach(comment => {
         const newComment = document.createElement('div');
         newComment.classList.add('commentViewBox');
-        newComment.id = comment.comment_id;
+        newComment.id = comment.id;
 
         const commentEditorBox = document.createElement('div');
         commentEditorBox.classList.add('commentViewEditorBox');
@@ -164,7 +171,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const profileImg = document.createElement('img');
         profileImg.classList.add('profileImg');
-        profileImg.src = `${backURL}${comment.profile_img}`;
+        profileImg.src = comment.profile_img
+            ? `${backURL}${comment.profile_img}`
+            : '/public/images/profile_img.webp';
 
         profileImgBox.appendChild(profileImg);
 
@@ -186,12 +195,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const modifyBtn = document.createElement('button');
             modifyBtn.classList.add('modifyAndDeleteBtn');
-            modifyBtn.id = `commentModify-${comment.comment_id}`;
+            modifyBtn.id = `commentModify-${comment.id}`;
             modifyBtn.textContent = '수정';
 
             const deleteBtn = document.createElement('button');
             deleteBtn.classList.add('modifyAndDeleteBtn');
-            deleteBtn.id = `commentDelete-${comment.comment_id}`;
+            deleteBtn.id = `commentDelete-${comment.id}`;
             deleteBtn.textContent = '삭제';
 
             btnBox.appendChild(modifyBtn);
@@ -200,11 +209,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             commentEditorBox.appendChild(btnBox);
             modifyBtn.onclick = async () => {
                 const commentData = await fetch(
-                    `${backURL}/posts/${postId}/comments/${comment.comment_id}`,
+                    `${backURL}/posts/${postId}/comments/${comment.id}`,
                 )
                     .then(res => res.json())
                     .catch(error => console.error(error));
-                commentArea.value = commentData.comment_content;
+                commentArea.value = commentData.content;
                 addCommentBtn.classList.add('hide');
                 modifyCommentBtn.classList.remove('hide');
                 patchComment(commentData);
@@ -220,7 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
             commentModalOk.onclick = async () => {
                 await fetch(
-                    `${backURL}/posts/${postId}/comments/${comment.comment_id}`,
+                    `${backURL}/posts/${postId}/comments/${comment.id}`,
                     {
                         method: 'DELETE',
                     },
@@ -237,7 +246,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const commentContent = document.createElement('p');
         commentContent.classList.add('commentContent');
-        commentContent.textContent = comment.comment_content;
+        commentContent.textContent = comment.content;
 
         newComment.appendChild(commentEditorBox);
         newComment.appendChild(commentContent);
@@ -292,9 +301,9 @@ async function patchComment(commentData) {
     modifyCommentBtn.addEventListener(
         'click',
         await function () {
-            commentData.comment_content = commentArea.value;
+            commentData.content = commentArea.value;
             fetch(
-                `${backURL}/posts/${commentData.post_id}/comments/${commentData.comment_id}`,
+                `${backURL}/posts/${commentData.postId}/comments/${commentData.commentId}`,
                 {
                     method: 'PATCH',
                     body: JSON.stringify(commentData),
@@ -329,16 +338,6 @@ async function likeBtnEventListener(postId) {
                 }
             })
             .catch(err => console.error(err));
-
-        const post = fetch(`${backURL}/data/posts/${postId}`)
-            .then(async res => {
-                const data = await res.json();
-                if (res.ok) {
-                    likeCount.textContent = numericalPrefix(data.like);
-                } else {
-                    console.error(data);
-                }
-            })
-            .catch(error => console.error(error));
+        window.location.reload();
     });
 }

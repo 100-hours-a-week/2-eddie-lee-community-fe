@@ -29,7 +29,9 @@ document.addEventListener('DOMContentLoaded', async (req, res) => {
             return res.json();
         })
         .catch(error => console.error(error));
-    userProfile.src = `${backURL}${userData.profile_img}`;
+    userProfile.src = userData.profileImg
+        ? `${backURL}${userData.profileImg}`
+        : '/public/images/profile_img.webp';
     const userId = userData.user_id;
     const url = window.location.pathname;
     const postId = url.split('/')[2];
@@ -40,9 +42,15 @@ document.addEventListener('DOMContentLoaded', async (req, res) => {
     logoutLink.href = `${frontURL}/auth/login`;
 
     try {
-        const resPostData = await fetch(`${backURL}/data/posts/${postId}`);
-        const postData = await resPostData.json();
-
+        const postData = await fetch(`${backURL}/posts/${postId}/data`).then(
+            async res => {
+                if (res.ok) {
+                    return await res.json();
+                } else {
+                    throw new Error('get post data failed..');
+                }
+            },
+        );
         inputTitle.value = postData.title;
         inputContent.value = postData.content;
         inputImg.src = postData.profile_img;

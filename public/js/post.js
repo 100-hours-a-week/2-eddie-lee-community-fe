@@ -11,14 +11,15 @@ const logoutLink = document.getElementById('logoutLink');
 //게시글 목록의 요소를 담는 div태그
 const postContentDiv = document.getElementsByClassName('postContentDiv');
 
-const baseURL = config.BASE_URL;
+const backURL = config.BASE_URL;
 const frontURL = config.FRONT_URL;
+const rootDir = config.ROOT_DIRECTORY;
 
 let contentsCount = 0;
 let userId = 0;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const userData = await fetch(`${baseURL}/users/session`, {
+    const userData = await fetch(`${backURL}/users/session`, {
         method: 'GET',
         credentials: 'include',
     }).then(async res => {
@@ -29,7 +30,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error(`Get session failed..`);
         }
     });
-    userProfile.src = `${baseURL}${userData.profile_img}`;
+    userProfile.src = userData.profileImg
+        ? `${backURL}${userData.profileImg}`
+        : '/public/images/profile_img.webp';
     const url = window.location.pathname;
     modifyUserInfoLink.href = `${frontURL}/users/`;
     modifyPasswdLink.href = `${frontURL}/users/passwd`;
@@ -38,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 //infinite scroll
 async function getContents() {
-    const postList = await fetch(`${baseURL}/posts`, {
+    const postList = await fetch(`${backURL}/posts`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -56,7 +59,7 @@ async function getContents() {
     postList.forEach(postInfo => {
         const newPost = document.createElement('div');
         newPost.classList.add('postContentDiv');
-        newPost.id = postInfo.post_id; // 각 게시물에 고유 ID 부여
+        newPost.id = postInfo.id; // 각 게시물에 고유 ID 부여
 
         // 제목 요소 생성
         const postTitle = document.createElement('h3');
@@ -105,7 +108,12 @@ async function getContents() {
 
         const profileImg = document.createElement('img');
         profileImg.classList.add('profileImg');
-        profileImg.src = `${baseURL}${postInfo.profile_img}`;
+        if (postInfo.profileImg === null) {
+            profileImg.src = `public/images/profile_img.webp`;
+            console.log(profileImg.src);
+        } else {
+            profileImg.src = `${backURL}${postInfo.profileImg}`;
+        }
 
         profileImgBox.appendChild(profileImg);
 
