@@ -70,7 +70,9 @@ document.addEventListener('DOMContentLoaded', async (req, res) => {
             return res.json();
         })
         .catch(error => console.error(error));
-    userProfile.src = `${backURL}${userData.profile_img}`;
+    userData.profileImg
+        ? `${backURL}${userData.profileImg}`
+        : '/public/images/profile_img.webp';
     const userId = userData.user_id;
     modifyUserInfoLink.href = `${frontURL}/users`;
     modifyPasswdLink.href = `${frontURL}/users/passwd`;

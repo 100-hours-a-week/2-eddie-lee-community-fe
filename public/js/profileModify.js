@@ -61,8 +61,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         })
         .catch(error => console.error(error));
 
-    userProfile.src = `${backURL}${userData.profile_img}`;
-    profileImg.src = `${backURL}${userData.profile_img}`;
+    userProfile.src = userData.profileImg
+        ? `${backURL}${userData.profileImg}`
+        : '/public/images/profile_img.webp';
+    profileImg.src = userData.profileImg
+        ? `${backURL}${userData.profileImg}`
+        : '/public/images/profile_img.webp';
     showEmail.textContent = userData.email;
     inputNickname.placeholder = userData.nickname;
     modifyUserInfoLink.href = `${frontURL}/users/`;
