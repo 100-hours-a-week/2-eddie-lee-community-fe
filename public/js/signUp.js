@@ -79,20 +79,27 @@ inputEmail.onkeyup = async () => {
     addHide(invalidEmail);
     if (inputEmail.value.length === 0) {
         addHide(invalidEmail);
-        addHide(dupEmail);
         removeHide(noInputEmail);
     } else if (!emailPattern.test(inputEmail.value)) {
         addHide(noInputEmail);
-        addHide(dupEmail);
         removeHide(invalidEmail);
-    } else if (await isDuplicate(inputEmail.value, 'email')) {
-        addHide(noInputEmail);
-        removeHide(dupEmail);
-        addHide(invalidEmail);
     } else {
         addHide(noInputEmail);
-        addHide(dupEmail);
         addHide(invalidEmail);
+    }
+};
+
+inputEmail.onblur = async () => {
+    const result = await fetch(
+        `${backURL}/auth/duplicate?type=email&input=${inputEmail.value}`,
+        {
+            credentials: 'include',
+        },
+    ).then(res => res.json());
+    if (result.data) {
+        removeHide(dupEmail);
+    } else {
+        addHide(dupEmail);
     }
 };
 
@@ -127,12 +134,10 @@ recheckPasswd.onkeyup = function () {
 inputNickname.onkeyup = async () => {
     addHide(tooLongNickname);
     addHide(noInputNickname);
-    addHide(dupNickname);
     addHide(includeSpaceNickname);
     if (inputNickname.value.length === 0) {
         removeHide(noInputNickname);
         addHide(includeSpaceNickname);
-        addHide(dupNickname);
         addHide(tooLongNickname);
     } else if (
         !nicknameValid(inputNickname) &&
@@ -140,23 +145,29 @@ inputNickname.onkeyup = async () => {
     ) {
         removeHide(includeSpaceNickname);
         addHide(noInputNickname);
-        addHide(dupNickname);
         addHide(tooLongNickname);
     } else if (inputNickname.value.length > 10) {
         removeHide(tooLongNickname);
         addHide(noInputNickname);
-        addHide(dupNickname);
-        addHide(includeSpaceNickname);
-    } else if (await isDuplicate(inputNickname.value, 'nickname')) {
-        addHide(tooLongNickname);
-        addHide(noInputNickname);
-        removeHide(dupNickname);
         addHide(includeSpaceNickname);
     } else {
         addHide(tooLongNickname);
         addHide(noInputNickname);
-        addHide(dupNickname);
         addHide(includeSpaceNickname);
+    }
+};
+
+inputNickname.onblur = async () => {
+    const result = await fetch(
+        `${backURL}/auth/duplicate?type=nickname&input=${inputNickname.value}`,
+        {
+            credentials: 'include',
+        },
+    ).then(res => res.json());
+    if (result.data) {
+        removeHide(dupNickname);
+    } else {
+        addHide(dupNickname);
     }
 };
 
@@ -168,6 +179,9 @@ signupForm.oninput = function () {
     ) {
         signupBtn.style.backgroundColor = '#7F6AEE';
         signupBtn.disabled = false;
+    } else {
+        signupBtn.style.backgroundColor = '#ACA0EB';
+        signupBtn.disabled = true;
     }
 };
 

@@ -15,7 +15,7 @@ const backURL = config.BASE_URL;
 const frontURL = config.FRONT_URL;
 const rootDir = config.ROOT_DIRECTORY;
 
-let contentsCount = 0;
+let contentsCount = 1;
 let userId = 0;
 
 document.addEventListener('DOMContentLoaded', async () => {
