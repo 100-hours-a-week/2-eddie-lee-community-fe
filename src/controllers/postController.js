@@ -1,22 +1,18 @@
-import config from '../../public/config.js';
-import fs from 'fs';
-
-const rootDirname = config.ROOT_DIRECTORY;
-const viewDirname = `${rootDirname}/src/views`;
+import { __dirname } from '../../app.js';
 
 //GET
 export const viewPostPage = async (req, res) => {
-    res.sendFile(`${viewDirname}/Posts.html`);
+    res.sendFile(`${__dirname}/src/views/Posts.html`);
 };
 
 export const viewCreatePost = async (req, res) => {
-    res.sendFile(`${viewDirname}/createPost.html`);
+    res.sendFile(`${__dirname}/src/views/createPost.html`);
 };
 
 export const viewPostInfo = async (req, res) => {
-    res.sendFile(`${viewDirname}/postInfo.html`);
+    res.sendFile(`${__dirname}/src/views/postInfo.html`);
 };
 
 export const viewModifyPost = async (req, res) => {
-    res.sendFile(`${viewDirname}/modifyPost.html`);
+    res.sendFile(`${__dirname}/src/views/modifyPost.html`);
 };

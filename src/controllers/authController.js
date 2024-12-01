@@ -1,14 +1,9 @@
-import config from '../../public/config.js';
-
-const rootDirname = config.ROOT_DIRECTORY;
-const viewDirname = `${rootDirname}/src/views`;
-const backURL = config.BASE_URL;
-
+import { __dirname } from '../../app.js';
 //GET
 export const viewLogin = async (req, res) => {
-    res.sendFile(`${viewDirname}/login.html`);
+    res.sendFile(`${__dirname}/src/views/login.html`);
 };
 
 export const viewSignup = async (req, res) => {
-    res.sendFile(`${viewDirname}/signUp.html`);
+    res.sendFile(`${__dirname}/src/views/signUp.html`);
 };

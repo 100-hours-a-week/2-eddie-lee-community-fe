@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import userRouter from './src/routes/userRoutes.js';
 import postRouter from './src/routes/postRoutes.js';
 import authRouter from './src/routes/authRoutes.js';
-//import dataRouter from './src/routes/dataRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -19,7 +18,6 @@ app.use(router);
 router.use('/users', userRouter);
 router.use('/posts', postRouter);
 router.use('/auth', authRouter);
-//router.use('/data', dataRouter);
 
 app.get('/', (req, res) => {
     res.redirect(301, '/auth/login');
@@ -28,3 +26,5 @@ app.get('/', (req, res) => {
 app.listen(port, '0.0.0.0', () => {
     console.log(`Example app listening on port ${port}`);
 });
+
+export { __dirname };

@@ -13,7 +13,6 @@ const postContentDiv = document.getElementsByClassName('postContentDiv');
 
 const backURL = config.BASE_URL;
 const frontURL = config.FRONT_URL;
-const rootDir = config.ROOT_DIRECTORY;
 
 let contentsCount = 1;
 let userId = 0;
