@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
-const port = 4444;
+const port = 7777;
 const router = express.Router();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
