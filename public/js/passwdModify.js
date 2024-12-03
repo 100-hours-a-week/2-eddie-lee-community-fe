@@ -11,6 +11,7 @@ const inputCheckHelperText = document.getElementById('inputCheckHelperText');
 const inputCheckDifferent = document.getElementById('inputCheckDifferent');
 const modifyBtn = document.getElementById('modifyBtn');
 const usrProfileBox = document.getElementById('usrProfileBox');
+const userProfile = document.getElementById('userProfile');
 const toast = document.getElementById('toast');
 const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
 const modifyPasswdLink = document.getElementById('modifyPasswdLink');
@@ -70,10 +71,9 @@ document.addEventListener('DOMContentLoaded', async (req, res) => {
             return res.json();
         })
         .catch(error => console.error(error));
-    userData.profileImg
+    usrProfile.src = userData.profileImg
         ? `${backURL}${userData.profileImg}`
         : '/public/images/profile_img.webp';
-    const userId = userData.user_id;
     modifyUserInfoLink.href = `${frontURL}/users`;
     modifyPasswdLink.href = `${frontURL}/users/passwd`;
     logoutLink.href = `${frontURL}/auth/login`;

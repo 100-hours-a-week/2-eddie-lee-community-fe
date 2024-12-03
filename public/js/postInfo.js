@@ -28,6 +28,7 @@ const modifyCommentBtn = document.getElementById('modifyCommentBtn');
 const modifyUserInfoLink = document.getElementById('modifyUserInfoLink');
 const modifyPasswdLink = document.getElementById('modifyPasswdLink');
 const logoutLink = document.getElementById('logoutLink');
+const goBackLink = document.getElementById('goBackLink');
 
 const backURL = config.BASE_URL;
 const frontURL = config.FRONT_URL;
@@ -69,6 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     modifyUserInfoLink.href = `${frontURL}/users/`;
     modifyPasswdLink.href = `${frontURL}/users/passwd`;
     logoutLink.href = `${frontURL}/auth/login`;
+    goBackLink.href = `${frontURL}/posts`;
     //조회 수 증가
     await fetch(`${backURL}/posts/${postId}/view`, {
         method: 'PATCH',

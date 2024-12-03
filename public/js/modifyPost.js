@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async (req, res) => {
             return res.json();
         })
         .catch(error => console.error(error));
-    userProfile.src = userData.profileImg
+    usrProfile.src = userData.profileImg
         ? `${backURL}${userData.profileImg}`
         : '/public/images/profile_img.webp';
     const userId = userData.user_id;
