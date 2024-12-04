@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import {HelperText, InputFile, InputLabel, InputPostContent, InputPostTitle} from "../components/InputFields";
 import {SetMainButton} from "../components/Button";
-import {useLocation} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
+import config from "../config";
 
 const AddPostTitleBox = styled.div`
     display: flex;
@@ -24,10 +26,17 @@ const AddPostArticle = styled.article`
 `
 
 function EditPost() {
-    const location = useLocation();
-
-    const {state} = location;
-    const postData = state;
+    const {postId} = useParams();
+    const [postData, setPostData] = useState({});
+    useEffect(() => {
+        const fetchData = async () => {
+            try{
+                const response = await fetch(`${config.API_URL}/posts/${postId}/data`, {})
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    },[])
     const handleSubmit = () => {}
     return (
         <>

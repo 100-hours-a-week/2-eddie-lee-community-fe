@@ -1,8 +1,10 @@
-import React, {useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import backArrow from '../assets/images/back_arrow.png'
 import styled from 'styled-components'
-import defaultProfileImg from '../assets/images/profile_img.webp'
 import {useNavigate} from "react-router-dom";
+import config from '../config'
+import {useAtomValue} from 'jotai';
+import {profileImgAtom} from "../state/atom";
 
 const HeaderBox = styled.div`
     display: flex;
@@ -95,7 +97,7 @@ const ProjectTitle = () => {
     return <HeaderTitle>아무말 대잔치</HeaderTitle>
 }
 
-const ProfilePhoto = () => {
+const ProfilePhoto = ({profileImg}) => {
     const [isClicked, setIsClicked] = useState(false);
     const navigate = useNavigate();
     const handleClick = () =>{
@@ -116,7 +118,7 @@ const ProfilePhoto = () => {
 
     return (
         <UserProfileBox onClick={handleClick}>
-            <UserProfileImg src={defaultProfileImg} />
+            <UserProfileImg src={profileImg} />
             <Dropdown isClicked={isClicked}>
                 <DropdownContent onClick={handleEditUser}>회원정보수정</DropdownContent>
                 <DropdownContent onClick={handleEditUserPasswd}>비밀번호수정</DropdownContent>
@@ -126,15 +128,16 @@ const ProfilePhoto = () => {
     )
 }
 function Header({pathName}) {
+    const profileImg = useAtomValue(profileImgAtom);
     const headerComponent = {
-        '/auth/login': <OnlyTitle />,
+        '/auth/login': <OnlyTitle/>,
         '/auth/signup': <GoBackAndTitle/>,
-        '/posts': <ProfileAndTitle/>,
-        '/users': <ProfileAndTitle/>,
-        '/users/passwd': <ProfileAndTitle/>,
+        '/posts': <ProfileAndTitle profileImg={profileImg}/>,
+        '/users': <ProfileAndTitle profileImg={profileImg}/>,
+        '/users/passwd': <ProfileAndTitle profileImg={profileImg}/>,
     }
 
-    return headerComponent[pathName] || <GetAllHeader/>;
+    return headerComponent[pathName] || <GetAllHeader profileImg={profileImg}/>;
 }
 
 const OnlyTitle = () => {
@@ -160,25 +163,25 @@ const GoBackAndTitle = () =>{
     )
 }
 
-const ProfileAndTitle = () => {
+const ProfileAndTitle = ({profileImg}) => {
     return (
         <>
             <HeaderBox>
                 <ProjectTitle/>
-                <ProfilePhoto/>
+                <ProfilePhoto profileImg={profileImg} />
             </HeaderBox>
             <HorizontalRule/>
         </>
     )
 }
 
-const GetAllHeader = () => {
+const GetAllHeader = ({profileImg}) => {
     return (
         <>
             <HeaderBox>
                 <GoBackBtn/>
                 <ProjectTitle/>
-                <ProfilePhoto/>
+                <ProfilePhoto profileImg={profileImg}/>
             </HeaderBox>
             <HorizontalRule/>
         </>

@@ -1,22 +1,10 @@
 import styled from "styled-components";
 import {SetSmallButton} from "../components/Button";
 import {useNavigate} from "react-router-dom";
-import {useCallback, useEffect, useState} from "react";
-
-//더미 데이터
-import defaultProfileImg from "../assets/images/profile_img.webp";
+import {useCallback, useEffect, useRef, useState} from "react";
+import config from "../config";
 import PostLists from "../components/PostLists";
-const data = {
-    id: 0,
-    title: '제목',
-    likes: 123000,
-    comment_count: 3,
-    content: '내용용요용용',
-    views: 4560000,
-    timestamp: '2000-01-01 00:00:00',
-    profileImg: defaultProfileImg,
-    nickname: 'nickname',
-}
+
 const PostsTitle = styled.p`
     font-size: 24px;
     color: #000;
@@ -48,62 +36,57 @@ const PostTitle = () =>{
 
 function Posts() {
     const [posts, setPosts] = useState([]);
-    const [offset, setOffset] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
+    const loaderRef = useRef(null);
 
-    const dummyPosts = [];
+    const ITEMS_PER_PAGE = 5;
+
     const navigate = useNavigate();
     const handleCreatePost = (e) => {
         navigate('/posts/edit');
     }
 
 
-    const getPosts = useCallback(()=>{
-        if(loading || !hasMore) return;
-        setLoading(true);
-        //더미 데이터
-        const newPosts = [];
-        if(offset < dummyPosts.length) {
-            for (let i = 0; i < 10; i++) {
-                if(offset + i > dummyPosts.length) return;
-                newPosts.push(dummyPosts[offset + i]);
-            }
-        }
-        if(newPosts.length > 0) {
+    const getPosts = async (page)=>{
+        try {
+            const response = await fetch(`${config.API_URL}/posts?page=${page}`, {
+                method: "GET",
+            });
+            const newPosts = await response.json();
+            console.log(newPosts);
             setPosts((prev) => [...prev, ...newPosts]);
-            setOffset((prev) => prev + newPosts.length);
-        } else {
-            setHasMore(false);
-        }
-        setLoading(false);
-    }, [offset, loading, hasMore]);
+            setHasMore(newPosts.length === ITEMS_PER_PAGE);
+        }catch(err){ console.error(err); }
+    };
 
-    const handleScroll = useCallback(() => {
-        if (
-            window.innerHeight + document.documentElement.scrollTop >=
-            document.documentElement.offsetHeight - 100 // 스크롤 끝에 근접하면
-        ) {
-            getPosts(); // 데이터 요청
-        }
-    }, [getPosts]);
+    const observerCallback = useCallback(
+        (entries) => {
+            const target = entries[0];
+            if (target.isIntersecting && hasMore) {
+                setPage(prev => prev + 1);
+            }
+        },
+        [hasMore]
+    );
 
     useEffect(() => {
-        //더미 데이터 복제
-        for(let i = 0; i < 50; i++){
-            data.id = i;
-            dummyPosts.push({...data, id: i});
-        }
-        getPosts();
-    }, []);
+        const observer = new IntersectionObserver(observerCallback, {
+            root: null, // 뷰포트 기준
+            rootMargin: "0px",
+            threshold: 1.0, // 100% 보일 때 트리거
+        });
 
-    useEffect(() => {
-        // 스크롤 이벤트 등록
-        window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, [handleScroll]);
+        // loaderRef에 Observer 연결
+        if (loaderRef.current) observer.observe(loaderRef.current);
+
+        // 컴포넌트 언마운트 시 Observer 해제
+        return () => observer.disconnect();
+    }, [observerCallback]);
+
+    useEffect(()=>{
+        getPosts(page);
+    }, [page]);
 
     return (
         <>
@@ -116,10 +99,10 @@ function Posts() {
                 </AddPostsDiv>
                 <PostsArea>
                     {posts.map((post, i) =>(
-                        <PostLists postData={post}/>
-                    ))};
+                        <PostLists key={post.id} postData={post}/>
+                    ))}
                 </PostsArea>
-                {loading && <p>로딩 중...</p>}
+                {hasMore && <div ref={loaderRef} style={{ height: "50px", background: "lightgray" }}>Loading...</div>}
             </PostsArticle>
         </>
     )

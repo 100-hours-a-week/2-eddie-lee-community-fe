@@ -5,8 +5,9 @@ import {SetMainButton} from "../components/Button"
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {isValidEmail, isValidPassword} from "../utils/validation";
-import {useAtomValue} from "jotai";
+import {useAtom} from "jotai";
 import config from "../config";
+import {profileImgAtom, userIdAtom} from "../state/atom";
 
 const LoginTitleStyle = styled.h1`
     font-size: 32px;
@@ -47,6 +48,8 @@ function Login () {
     const [validPassword, setValidPassword] = useState(false);
     const [passwdHelperText, setPasswdHelperText] = useState('*비밀번호를 입력해주세요');
     const [btnColor, setBtnColor] = useState(false);
+    const [profileImg, setProfileImg] = useAtom(profileImgAtom);
+    const [userId, setUserId] = useAtom(userIdAtom);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -89,14 +92,21 @@ function Login () {
                 const formData = new FormData();
                 formData.append("email", email);
                 formData.append("passwd", btoa(password));
-                console.log(btoa(password));
                 const loginResponse = await fetch(`${config.API_URL}/auth/login`, {
                     method: 'POST',
                     body: formData,
                     credentials: "include",
                 });
                 if(loginResponse.ok){
-                    navigate('/posts');
+                    try{
+                        const userData = await fetch(`${config.API_URL}/users/session`, {
+                            method: 'GET',
+                            credentials: "include",
+                        }).then(res => res.json());
+                        if(userData.profileImg) {setProfileImg(`${config.API_URL}${userData.profileImg}`);}
+                        setUserId(userData.user_id);
+                        navigate('/posts');
+                    } catch(err){console.log('get session failed..' + err)}
                 } else {
                     setPasswdHelperText('*아이디 또는 비밀번호를 확인해주세요.');
                 }
