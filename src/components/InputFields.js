@@ -68,14 +68,14 @@ export const HelperText = ({label}) =>{
     return <HelperTextStyle>{label}</HelperTextStyle>;
 }
 
-export const InputPostTitle = ({placeholder}) => {
-    return <InputTitle type={"text"} maxLength={26} placeholder={placeholder}/>
+export const InputPostTitle = ({placeholder, onInput}) => {
+    return <InputTitle type={"text"} maxLength={26} placeholder={placeholder} onInput={onInput}/>
 }
 
-export const InputPostContent = ({placeholder}) => {
-    return <InputContent type={"textbox"} rows={14} placeholder={placeholder}/>
+export const InputPostContent = ({placeholder, onInput}) => {
+    return <InputContent type={"textbox"} rows={14} placeholder={placeholder} onInput={onInput}/>
 }
 
-export const InputFile = () => {
-    return <input type={"file"} accept={"image/*"}/>
+export const InputFile = ({onChange}) => {
+    return <input type={"file"} accept={"image/*"} onChange={onChange}/>
 }
