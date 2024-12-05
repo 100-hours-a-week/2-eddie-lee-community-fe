@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useState} from 'react'
 import backArrow from '../assets/images/back_arrow.png'
 import styled from 'styled-components'
 import {useNavigate} from "react-router-dom";

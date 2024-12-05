@@ -199,7 +199,7 @@ const SetCommentViewBox = ({commentData, handleModify, userId}) => {
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
     useEffect(() => {
         if(userId === commentData.user_id) setIsEditor(true);
-        if(commentData.profile_img) setProfileSrc(`${config.API_URL}${commentData.profile_img}`);
+        if(commentData.profile_img) setProfileSrc(`${commentData.profile_img}`);
     }, []);
 
 
@@ -285,10 +285,10 @@ function PostInfo (){
                     setIsEditor(true);
                 }
                 if(data.image){
-                    setPostSrc(`${config.API_URL}${data.image}`);
+                    setPostSrc(`${data.image}`);
                 }
                 if(data.profileImg){
-                    setProfileSrc(`${config.API_URL}${data.profileImg}`);
+                    setProfileSrc(`${data.profileImg}`);
                 }
                 setLikeCount(data.like);
             }catch (error) {console.error(error)}
@@ -310,7 +310,7 @@ function PostInfo (){
 
     const updateLikes = async () => {
         try {
-            const response = await fetch(`${config.API_URL}/posts/${postId}/like`, {
+            await fetch(`${config.API_URL}/posts/${postId}/like`, {
                 method: 'PATCH',
             }).then(res => {
                 if(!res.ok) throw new Error('update like failed');

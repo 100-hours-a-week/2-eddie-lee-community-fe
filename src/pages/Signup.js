@@ -1,11 +1,9 @@
 import styled from "styled-components";
 import {InputLabel, HelperText, InputField} from "../components/InputFields";
 import TextLink from "../components/TextLink";
-import * as Button from "../components/Button";
 import SelectProfileImg from "../components/ProfileImage";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import profileImage from "../components/ProfileImage";
 import {isValidEmail, isValidPassword, isValidNickname, isDuplicate} from "../utils/validation";
 import config from "../config";
 import {SetMainButton} from "../components/Button";

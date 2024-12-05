@@ -94,7 +94,7 @@ export const EditorInfo = ({profileImg, nickname, padding}) =>{
 function PostLists({postData}){
     useEffect(()=>{
         if(postData.profileImg){
-            setProfileSrc(`${config.API_URL}${postData.profileImg}`);
+            setProfileSrc(`${postData.profileImg}`);
         }
 
     },[postData.profileImg]);

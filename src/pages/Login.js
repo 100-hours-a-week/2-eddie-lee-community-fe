@@ -60,7 +60,6 @@ function Login () {
                 credentials: 'include',
             }).then(res => {
                 if(!res.ok) { throw new Error('Failed to delete session.'); }
-                return res.json();
             })
         }
         deleteSession();
@@ -117,7 +116,7 @@ function Login () {
                             method: 'GET',
                             credentials: "include",
                         }).then(res => res.json());
-                        if(userData.profileImg) {setProfileImg(`${config.API_URL}${userData.profileImg}`);}
+                        if(userData.profileImg) {setProfileImg(`${userData.profileImg}`);}
                         else {setProfileImg(defaultProfileImg)}
                         setUserId(userData.user_id);
                         navigate('/posts');
