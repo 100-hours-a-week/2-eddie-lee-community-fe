@@ -8,6 +8,7 @@ import {isValidEmail, isValidPassword} from "../utils/validation";
 import {useAtom} from "jotai";
 import config from "../config";
 import {profileImgAtom, userIdAtom} from "../state/atom";
+import defaultProfileImg from "../assets/images/profile_img.webp";
 
 const LoginTitleStyle = styled.h1`
     font-size: 32px;
@@ -51,6 +52,19 @@ function Login () {
     const [profileImg, setProfileImg] = useAtom(profileImgAtom);
     const [userId, setUserId] = useAtom(userIdAtom);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const deleteSession = async () => {
+            await fetch(`${config.API_URL}/users/session`,{
+                method: 'DELETE',
+                credentials: 'include',
+            }).then(res => {
+                if(!res.ok) { throw new Error('Failed to delete session.'); }
+                return res.json();
+            })
+        }
+        deleteSession();
+    },[])
 
     useEffect(() => {
         if(validEmail && validPassword) {setBtnColor(true)}
@@ -104,6 +118,7 @@ function Login () {
                             credentials: "include",
                         }).then(res => res.json());
                         if(userData.profileImg) {setProfileImg(`${config.API_URL}${userData.profileImg}`);}
+                        else {setProfileImg(defaultProfileImg)}
                         setUserId(userData.user_id);
                         navigate('/posts');
                     } catch(err){console.log('get session failed..' + err)}

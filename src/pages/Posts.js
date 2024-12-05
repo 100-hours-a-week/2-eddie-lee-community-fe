@@ -54,7 +54,6 @@ function Posts() {
                 method: "GET",
             });
             const newPosts = await response.json();
-            console.log(newPosts);
             setPosts((prev) => [...prev, ...newPosts]);
             setHasMore(newPosts.length === ITEMS_PER_PAGE);
         }catch(err){ console.error(err); }

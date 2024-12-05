@@ -60,20 +60,20 @@ export const InputLabel = ({label}) => {
     return <InputLabels>{label}</InputLabels>;
 }
 
-export const InputField = ({placeholder, inputListener, type}) => {
-    return <InputFields placeholder={placeholder} onInput={inputListener} type={type}/>;
+export const InputField = ({placeholder, inputListener, type, onBlur}) => {
+    return <InputFields placeholder={placeholder} onInput={inputListener} type={type} onBlur={onBlur}/>;
 }
 
 export const HelperText = ({label}) =>{
     return <HelperTextStyle>{label}</HelperTextStyle>;
 }
 
-export const InputPostTitle = ({placeholder, onInput}) => {
-    return <InputTitle type={"text"} maxLength={26} placeholder={placeholder} onInput={onInput}/>
+export const InputPostTitle = ({placeholder, onInput, value}) => {
+    return <InputTitle type={"text"} maxLength={26} placeholder={placeholder} onInput={onInput} value={value}/>
 }
 
-export const InputPostContent = ({placeholder, onInput}) => {
-    return <InputContent type={"textbox"} rows={14} placeholder={placeholder} onInput={onInput}/>
+export const InputPostContent = ({placeholder, onInput, value}) => {
+    return <InputContent type={"textbox"} rows={14} placeholder={placeholder} onInput={onInput} value={value}/>
 }
 
 export const InputFile = ({onChange}) => {

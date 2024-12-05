@@ -33,7 +33,7 @@ const ModifyAndDeleteBtn = styled.button`
 `
 
 export const SetMainButton = ({label, onClick, valid}) =>{
-    return <MainButton onClick={onClick} valid={valid}> {label} </MainButton>
+    return <MainButton onClick={onClick} valid={valid} disabled={!valid}> {label} </MainButton>
 }
 
 export const SetSmallButton = ({label, onClick, marginLeft, padding}) =>{

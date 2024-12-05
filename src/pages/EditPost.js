@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import {HelperText, InputFile, InputLabel, InputPostContent, InputPostTitle} from "../components/InputFields";
 import {SetMainButton} from "../components/Button";
-import {useLocation, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import config from "../config";
 
@@ -26,18 +26,49 @@ const AddPostArticle = styled.article`
 `
 
 function EditPost() {
+    const location = useLocation();
     const {postId} = useParams();
-    const [postData, setPostData] = useState({});
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [isValid, setIsValid] = useState(false);
+    const navigate = useNavigate();
+
+
     useEffect(() => {
-        const fetchData = async () => {
-            try{
-                const response = await fetch(`${config.API_URL}/posts/${postId}/data`, {})
-            } catch (err) {
-                console.error(err);
-            }
+        if(title.length !== 0 && content.length !== 0){
+            setIsValid(true);
+        } else {
+            setIsValid(false);
         }
+    },[title, content]);
+
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+    }
+
+    useEffect(() => {
+        setTitle(location.state.title);
+        setContent(location.state.content);
     },[])
-    const handleSubmit = () => {}
+    const handleSubmit = async () => {
+        if(!isValid){ return; }
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("content", content);
+        formData.append("inputImg", selectedFile);
+        await fetch(`${config.API_URL}/posts/${postId}`, {
+            method: "PATCH",
+            body: formData,
+            credentials: "include",
+        }).then(res => {
+            if(!res.ok){
+                throw new Error("Failed to modify post");
+            }
+            return res.json();
+        })
+        navigate('/posts');
+    }
     return (
         <>
             <AddPostTitleBox>
@@ -45,13 +76,13 @@ function EditPost() {
             </AddPostTitleBox>
             <AddPostArticle>
                 <InputLabel label={"제목*"}/>
-                <InputPostTitle placeholder={postData.title}/>
+                <InputPostTitle value={title} onInput={e => setTitle(e.target.value)} />
                 <InputLabel label={'내용*'}/>
-                <InputPostContent placeholder={postData.content}/>
-                <HelperText label={'*제목과 내용을 모두 입력해주세요.'}/>
+                <InputPostContent value={content} onInput={e => setContent(e.target.value)} />
+                {isValid && <HelperText label={'*제목과 내용을 모두 입력해주세요.'}/>}
                 <InputLabel label={'이미지'}/>
-                <InputFile/>
-                <SetMainButton label={'수정하기'} onClick={handleSubmit}/>
+                <InputFile onChange={handleFileChange}/>
+                <SetMainButton label={'수정하기'} onClick={handleSubmit} valid={isValid}/>
             </AddPostArticle>
         </>
     )

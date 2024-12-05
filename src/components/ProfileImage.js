@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {useEffect, useState} from "react";
 import defaultProfileImg from "../assets/images/profile_img.webp"
+import config from "../config";
 
 const AddProfileImgBoxStyle = styled.div`
     width: 150px;
@@ -48,16 +49,27 @@ const ProfileImgChangeBtn = styled.p`
     text-align: center;
 `
 
-function SelectProfileImg ({name, filter}){
+function SelectProfileImg ({name, filter, onFileChange, setSrc}) {
     const [selectedImage, setSelectedImage] = useState(defaultProfileImg);
     const [isFiltered, setIsFiltered] = useState(false);
+
+    useEffect(() => {
+        if(setSrc) setSelectedImage(setSrc);
+    },[])
 
     // 파일 선택 시 이미지 업데이트
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setSelectedImage(imageUrl);
+            const reader = new FileReader();
+            reader.onload = e =>{
+                setSelectedImage(e.target.result);
+            }
+            reader.readAsDataURL(file);
+            onFileChange(file);
+        } else {
+            setSelectedImage(defaultProfileImg);
+            onFileChange(null);
         }
     };
 

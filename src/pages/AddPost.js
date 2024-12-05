@@ -41,6 +41,7 @@ function AddPost() {
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
     }
+
     const handleSubmit = async () => {
         if(title.length === 0 || content.length === 0) return;
         const formData = new FormData();
@@ -68,7 +69,7 @@ function AddPost() {
                 <InputPostTitle placeholder={'제목을 입력해주세요.(최대 26글자)'} onInput={e=>setTitle(e.target.value)}/>
                 <InputLabel label={'내용*'}/>
                 <InputPostContent placeholder={'내용을 입력해주세요.'} onInput={e=>setContent(e.target.value)}/>
-                {isValid && <HelperText label={'*제목과 내용을 모두 입력해주세요.'}/>}
+                {!isValid && <HelperText label={'*제목과 내용을 모두 입력해주세요.'}/>}
                 <InputLabel label={'이미지'}/>
                 <InputFile onChange = {handleFileChange}/>
                 <SetMainButton label={'완료'} onClick={handleSubmit} valid={isValid}/>

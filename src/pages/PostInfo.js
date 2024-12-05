@@ -193,12 +193,10 @@ const SetCommentBox = ({postId, editComment, onSave}) => {
     )
 }
 
-const SetCommentViewBox = ({commentData, handleModify}) => {
+const SetCommentViewBox = ({commentData, handleModify, userId}) => {
     const [isEditor, setIsEditor] = useState(false);
     const [profileSrc, setProfileSrc] = useState(defaultProfileImg);
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
-    const userId = useAtomValue(userIdAtom);
-    console.log(commentData);
     useEffect(() => {
         if(userId === commentData.user_id) setIsEditor(true);
         if(commentData.profile_img) setProfileSrc(`${config.API_URL}${commentData.profile_img}`);
@@ -245,7 +243,7 @@ const SetCommentViewBox = ({commentData, handleModify}) => {
 
 function PostInfo (){
     const {postId} = useParams();
-    const userId = useAtomValue(userIdAtom);
+    const [userId, setUserId] =useState(0);
     const [postData, setPostData] = useState({});
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
     const [isEditor, setIsEditor] = useState(false);
@@ -259,6 +257,14 @@ function PostInfo (){
     useEffect(() => {
         const fetchData = async () => {
             try{
+                const userData = await fetch(`${config.API_URL}/users/session`, {
+                    method: "GET",
+                    credentials: 'include',
+                }).then(async res => {
+                    if(!res.ok){throw new Error('Get user session failed')};
+                    return await res.json();
+                });
+                setUserId(userData.user_id);
                 await fetch(`${config.API_URL}/posts/${postId}/view`, {
                     method: "PATCH",
                 }).then(res => {
@@ -275,7 +281,7 @@ function PostInfo (){
                     return await res.json();
                 });
                 setPostData(data);
-                if(data.user_id === userId){
+                if(data.user_id === userData.user_id){
                     setIsEditor(true);
                 }
                 if(data.image){
@@ -312,7 +318,6 @@ function PostInfo (){
                     return res.json()
                 }
             });
-            console.log(response.data);
             setLikeCount(prev => prev + 1);
         } catch (error) {
             console.error(error);
@@ -320,7 +325,7 @@ function PostInfo (){
     }
 
     const handleModify = ()=>{
-        navigate(`/posts/${postData.id}`, {state: postData});
+        navigate(`/posts/${postId}`, {state: postData});
     }
 
     const handleDelete = ()=>{
@@ -368,7 +373,7 @@ function PostInfo (){
                 <SetCommunicationArea likes={likeCount} views={postData.view} comment_count={postData.comment_count} onClick={updateLikes}/>
                 <SetCommentBox postId={postId} editComment={editComment} onSave={()=>setEditComment(null)}/>
                 {comments.map((comment, i)=>(
-                    <SetCommentViewBox key={comment.id} commentData={comment} handleModify={handleCommentModify}/>
+                    <SetCommentViewBox key={comment.id} commentData={comment} handleModify={handleCommentModify} userId={userId}/>
                 ))}
             </PostArticle>
             {isPostModalOpen && (
