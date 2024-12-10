@@ -56,7 +56,6 @@ function AddPost() {
             if(!res.ok){ throw new Error("Failed to save post!"); }
             return await res.json();
         })
-        console.log(result);
         navigate("/posts");
     }
     return (
