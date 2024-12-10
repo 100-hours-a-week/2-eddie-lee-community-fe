@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import {useEffect, useState} from "react";
-import defaultProfileImg from "../assets/images/profile_img.webp"
-import config from "../config";
+import defaultProfileImg from "../assets/images/profile_img.webp";
 import {getImgURL} from "../utils/cdnPath";
 
 const AddProfileImgBoxStyle = styled.div`

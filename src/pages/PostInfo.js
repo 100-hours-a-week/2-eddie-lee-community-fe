@@ -147,7 +147,7 @@ const SetCommunicationArea = ({likes, views, comment_count, onClick}) =>{
 
 const SetPostImg = ({postImg}) => {
     return (
-        <PostImg src={postImg}/>
+        <PostImg src={getImgURL(postImg)}/>
     )
 }
 
@@ -198,7 +198,7 @@ const SetCommentViewBox = ({commentData, handleModify, userId}) => {
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
     useEffect(() => {
         if(userId === commentData.user_id) setIsEditor(true);
-        if(commentData.profile_img) setProfileSrc(getImgURL(commentData.profile_img));
+        if(commentData.profile_img) setProfileSrc(commentData.profile_img);
     }, []);
 
 
