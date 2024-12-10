@@ -284,10 +284,10 @@ function PostInfo (){
                     setIsEditor(true);
                 }
                 if(data.image){
-                    setPostSrc(getImgURL(data.image));
+                    setPostSrc(data.image);
                 }
                 if(data.profileImg){
-                    setProfileSrc(getImgURL(data.profileImg));
+                    setProfileSrc(data.profileImg);
                 }
                 setLikeCount(data.like);
             }catch (error) {console.error(error)}
