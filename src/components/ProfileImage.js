@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {useEffect, useState} from "react";
 import defaultProfileImg from "../assets/images/profile_img.webp"
 import config from "../config";
+import {getImgURL} from "../utils/cdnPath";
 
 const AddProfileImgBoxStyle = styled.div`
     width: 150px;
@@ -54,7 +55,7 @@ function SelectProfileImg ({name, filter, onFileChange, setSrc}) {
     const [isFiltered, setIsFiltered] = useState(false);
 
     useEffect(() => {
-        if(setSrc) setSelectedImage(setSrc);
+        if(setSrc) setSelectedImage(getImgURL(setSrc));
     },[])
 
     // 파일 선택 시 이미지 업데이트

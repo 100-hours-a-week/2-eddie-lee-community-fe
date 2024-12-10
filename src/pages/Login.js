@@ -9,6 +9,7 @@ import {useAtom} from "jotai";
 import config from "../config";
 import {profileImgAtom, userIdAtom} from "../state/atom";
 import defaultProfileImg from "../assets/images/profile_img.webp";
+import {getImgURL} from "../utils/cdnPath";
 
 const LoginTitleStyle = styled.h1`
     font-size: 32px;
@@ -116,7 +117,7 @@ function Login () {
                             method: 'GET',
                             credentials: "include",
                         }).then(res => res.json());
-                        if(userData.profileImg) {setProfileImg(`${userData.profileImg}`);}
+                        if(userData.profileImg) {setProfileImg(getImgURL(userData.profileImg));}
                         else {setProfileImg(defaultProfileImg)}
                         setUserId(userData.user_id);
                         navigate('/posts');

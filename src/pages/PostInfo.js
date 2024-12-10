@@ -1,14 +1,13 @@
 import styled from "styled-components";
 import {EditorInfo, PostTitle, PostHorizontalRule} from "../components/PostLists";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {SetModifyAndDeleteBtn, SetSmallButton} from "../components/Button";
 import {useEffect, useState} from "react";
 import Modal from "../components/Modal";
-import {useAtomValue} from "jotai";
-import {userIdAtom} from "../state/atom";
 import config from "../config";
 import defaultPostImg from "../assets/images/defaultPostImg.png";
 import defaultProfileImg from "../assets/images/profile_img.webp";
+import {getImgURL} from "../utils/cdnPath";
 
 
 const Time = styled.p`
@@ -199,7 +198,7 @@ const SetCommentViewBox = ({commentData, handleModify, userId}) => {
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
     useEffect(() => {
         if(userId === commentData.user_id) setIsEditor(true);
-        if(commentData.profile_img) setProfileSrc(`${commentData.profile_img}`);
+        if(commentData.profile_img) setProfileSrc(getImgURL(commentData.profile_img));
     }, []);
 
 
@@ -285,10 +284,10 @@ function PostInfo (){
                     setIsEditor(true);
                 }
                 if(data.image){
-                    setPostSrc(`${data.image}`);
+                    setPostSrc(getImgURL(data.image));
                 }
                 if(data.profileImg){
-                    setProfileSrc(`${data.profileImg}`);
+                    setProfileSrc(getImgURL(data.profileImg));
                 }
                 setLikeCount(data.like);
             }catch (error) {console.error(error)}

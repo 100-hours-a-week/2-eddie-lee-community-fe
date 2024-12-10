@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import defaultProfileImg from "../assets/images/profile_img.webp";
-import config from "../config";
+import {getImgURL} from "../utils/cdnPath";
 
 const PostDiv = styled.div`
     border-radius: 16px;
@@ -84,7 +84,7 @@ export const EditorInfo = ({profileImg, nickname, padding}) =>{
     return (
         <Editor padding={padding}>
             <ProfileImgBox>
-                <ProfileImg src={profileImg} alt={defaultProfileImg}/>
+                <ProfileImg src={getImgURL(profileImg)} alt={defaultProfileImg}/>
             </ProfileImgBox>
             <EditorNickname>{nickname}</EditorNickname>
         </Editor>
@@ -94,7 +94,7 @@ export const EditorInfo = ({profileImg, nickname, padding}) =>{
 function PostLists({postData}){
     useEffect(()=>{
         if(postData.profileImg){
-            setProfileSrc(`${postData.profileImg}`);
+            setProfileSrc(getImgURL(postData.profileImg));
         }
 
     },[postData.profileImg]);
