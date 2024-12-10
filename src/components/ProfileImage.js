@@ -87,7 +87,7 @@ function SelectProfileImg ({name, filter, onFileChange, setSrc}) {
                 <AddProfileImgBoxStyle onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} >
                     {isFiltered && <ProfileImgFilter/>}
                     {isFiltered && <ProfileImgChangeBtn>변경</ProfileImgChangeBtn>}
-                    <SelectProfileImgStyle src={getImgURL(selectedImage)} />
+                    <SelectProfileImgStyle src={selectedImage} />
                     <InputImgStyle type='file' name={name} accept={'image/*'} id='profileImg' onChange={handleImageChange}/>
                 </AddProfileImgBoxStyle>
             </LabelStyle>
