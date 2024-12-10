@@ -81,8 +81,6 @@ const SetSocialListText = ({label, inputValue}) =>{
 }
 
 export const EditorInfo = ({profileImg, nickname, padding}) =>{
-    //CDN
-    console.log(profileImg);
     return (
         <Editor padding={padding}>
             <ProfileImgBox>
@@ -98,8 +96,6 @@ function PostLists({postData}){
         if(postData.profileImg){
             setProfileSrc(postData.profileImg);
         }
-        //CDN
-        console.log(postData.profileImg);
     },[postData.profileImg]);
 
     const [profileSrc, setProfileSrc] = useState(defaultProfileImg);

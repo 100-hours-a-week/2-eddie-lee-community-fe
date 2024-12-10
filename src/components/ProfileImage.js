@@ -54,7 +54,7 @@ function SelectProfileImg ({name, filter, onFileChange, setSrc}) {
     const [isFiltered, setIsFiltered] = useState(false);
 
     useEffect(() => {
-        if(setSrc) setSelectedImage(getImgURL(setSrc));
+        if(setSrc) setSelectedImage(setSrc);
     },[])
 
     // 파일 선택 시 이미지 업데이트
@@ -87,7 +87,7 @@ function SelectProfileImg ({name, filter, onFileChange, setSrc}) {
                 <AddProfileImgBoxStyle onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} >
                     {isFiltered && <ProfileImgFilter/>}
                     {isFiltered && <ProfileImgChangeBtn>변경</ProfileImgChangeBtn>}
-                    <SelectProfileImgStyle src={selectedImage}/>
+                    <SelectProfileImgStyle src={getImgURL(selectedImage)} />
                     <InputImgStyle type='file' name={name} accept={'image/*'} id='profileImg' onChange={handleImageChange}/>
                 </AddProfileImgBoxStyle>
             </LabelStyle>
