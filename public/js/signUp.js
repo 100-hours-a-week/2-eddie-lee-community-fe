@@ -58,7 +58,7 @@ const removeHide = function (elementID) {
 
 const isDuplicate = async (inputData, dataType) => {
     const result = await fetch(
-        `${backURL}/data/signup?type=${dataType}&input=${inputData}`,
+        `${backURL}/auth/duplicate?type=${dataType}&input=${inputData}`,
     )
         .then(async res => {
             if (!res.ok) {
