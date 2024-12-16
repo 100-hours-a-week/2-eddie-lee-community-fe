@@ -35,6 +35,7 @@ const InputTitle = styled.input`
     border-right: none;
     resize: none;
     background-color: transparent;
+    font-size: 1rem;
     &::placeholder {
         font-size: 1rem;
         margin: 10px;
@@ -49,6 +50,7 @@ const InputContent = styled.textarea`
     border-right: none;
     resize: none;
     background-color: transparent;
+    font-size: 1rem;
     &::placeholder {
         font-size: 1rem;
         color: #B0C4DE;
