@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import ReactDOM from "react-dom";
-import {useEffect} from "react";
+import styled from 'styled-components';
+import ReactDOM from 'react-dom';
+import { useEffect } from 'react';
 
 const ModalScreen = styled.div`
     background-color: rgba(0, 0, 0, 0.5); /* 배경 투명도 */
@@ -16,7 +16,6 @@ const ModalScreen = styled.div`
     align-items: center; /* 세로 중앙 정렬 */
 `;
 
-
 const ModalBox = styled.div`
     background-color: white;
     border-radius: 10px;
@@ -31,20 +30,20 @@ const ModalBox = styled.div`
 `;
 
 const ModalTitle = styled.p`
-    font-size: 24px;
+    font-size: 1.5rem;
     text-align: center;
     color: black;
     font-weight: bold;
     width: 100%;
     margin-top: 10%;
-`
+`;
 
 const ModalContent = styled.p`
     font-size: 20px;
     text-align: center;
     color: black;
     width: 100%;
-`
+`;
 
 const ModalBtnBox = styled.div`
     width: 70%;
@@ -53,7 +52,7 @@ const ModalBtnBox = styled.div`
     justify-content: space-evenly;
     height: 15%;
     margin-top: 5%;
-`
+`;
 
 const ModalOkBtn = styled.button`
     width: 40%;
@@ -61,8 +60,8 @@ const ModalOkBtn = styled.button`
     border-radius: 10px;
     background-color: #c4a5fa;
     color: black;
-    font-size: 20px;
-`
+    font-size: 1.25rem;
+`;
 
 const ModalCancelBtn = styled.button`
     width: 40%;
@@ -71,10 +70,10 @@ const ModalCancelBtn = styled.button`
     background-color: #242424;
     color: white;
     height: 100%;
-    font-size: 20px;
-`
+    font-size: 1.25rem;
+`;
 
-const SetModalBox = ({title, content, okOnClick, cancelOnClick}) => {
+const SetModalBox = ({ title, content, okOnClick, cancelOnClick }) => {
     return (
         <ModalBox>
             <ModalTitle>{title}</ModalTitle>
@@ -84,29 +83,34 @@ const SetModalBox = ({title, content, okOnClick, cancelOnClick}) => {
                 <ModalOkBtn onClick={okOnClick}>확인</ModalOkBtn>
             </ModalBtnBox>
         </ModalBox>
-    )
-}
+    );
+};
 
-function Modal({title, content, okOnClick, cancelOnClick}) {
+function Modal({ title, content, okOnClick, cancelOnClick }) {
     useEffect(() => {
         // 모달이 열리면 스크롤 비활성화
-        document.body.style.overflow = "hidden";
+        document.body.style.overflow = 'hidden';
 
         return () => {
             // 모달이 닫히면 스크롤 복원
-            document.body.style.overflow = "auto";
+            document.body.style.overflow = 'auto';
         };
     }, []);
 
-    const handleScreenClick = (e) => {
+    const handleScreenClick = e => {
         e.stopPropagation(); // 클릭 이벤트 전파 방지
     };
     return ReactDOM.createPortal(
         <ModalScreen onClick={handleScreenClick}>
-            <SetModalBox title={title} content={content} okOnClick={okOnClick} cancelOnClick={cancelOnClick} />
+            <SetModalBox
+                title={title}
+                content={content}
+                okOnClick={okOnClick}
+                cancelOnClick={cancelOnClick}
+            />
         </ModalScreen>,
-        document.getElementById('modal-root')
-    )
+        document.getElementById('modal-root'),
+    );
 }
 
 export default Modal;

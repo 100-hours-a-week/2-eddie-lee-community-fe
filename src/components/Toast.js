@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const ToastStyle = styled.div`
     background-color: #aca0eb;
@@ -9,23 +9,23 @@ const ToastStyle = styled.div`
     z-index: 99;
     margin-left: 10%;
     margin-top: 50%;
-`
+`;
 
 const ToastText = styled.p`
     color: white;
-    font-size: 18px;
+    font-size: 1.125rem;
     padding-bottom: 5px;
     text-align: center;
     margin: 0;
     margin-top: 5%;
-`
+`;
 
 const Toast = () => {
-    return(
+    return (
         <ToastStyle>
             <ToastText>수정완료</ToastText>
         </ToastStyle>
-    )
-}
+    );
+};
 
 export default Toast;
