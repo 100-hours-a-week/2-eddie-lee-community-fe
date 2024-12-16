@@ -7,7 +7,7 @@ const InputFields = styled.input`
     border-radius: 5px;
     height: 30px;
 
-    ::placeholder {
+    &::placeholder {
         font-size: 0.875rem;
         color: #000;
         padding: 10px;
