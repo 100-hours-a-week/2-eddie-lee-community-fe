@@ -141,8 +141,6 @@ function Header({ pathName }) {
         '/auth/login': <OnlyTitle />,
         '/auth/signup': <GoBackAndTitle />,
         '/posts': <ProfileAndTitle profileImg={profileImg} />,
-        '/users': <ProfileAndTitle profileImg={profileImg} />,
-        '/users/passwd': <ProfileAndTitle profileImg={profileImg} />,
     };
 
     return (
