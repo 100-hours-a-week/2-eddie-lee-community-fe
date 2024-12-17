@@ -114,7 +114,10 @@ function Signup() {
 
     //email duplicate
     const handleEmailBlur = async () => {
-        if (emailHelperText === '' && (await isDuplicate(email, 'email'))) {
+        if(emailHelperText !== ''){
+            return;
+        }
+        if ((await isDuplicate(email, 'email'))) {
             setEmailHelperText('*중복된 이메일입니다.');
         } else {
             setValidEmail(true);

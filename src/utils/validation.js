@@ -25,6 +25,5 @@ export const isDuplicate = async (inputData, dataType) => {
         }
         return await res.json();
     });
-    console.log(data.data);
     return data.data;
 };
