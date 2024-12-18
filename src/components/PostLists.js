@@ -7,6 +7,7 @@ import { getImgURL } from '../utils/cdnPath';
 const PostDiv = styled.div`
     border-radius: 1rem;
     box-shadow: 3px 4px 4px 0px #cccccc40;
+    cursor: pointer;
 `;
 
 export const PostTitle = styled.h3`

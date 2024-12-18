@@ -5,6 +5,7 @@ const TextLinkStyle = styled.a`
     color: #000;
     text-align: ${props => props.align || 'center'};
     text-decoration-line: none;
+    cursor: pointer;
 `;
 
 const TextLink = ({ label, onClick, align }) => {

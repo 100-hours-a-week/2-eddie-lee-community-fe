@@ -10,6 +10,7 @@ const AddProfileImgBoxStyle = styled.div`
     margin-left: auto;
     padding: 0;
     position: relative;
+    cursor: pointer;
 `;
 
 const SelectProfileImgStyle = styled.img`

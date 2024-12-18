@@ -42,6 +42,7 @@ const UserProfileBox = styled.div`
     border-radius: 70%;
     margin-left: auto;
     padding: 0;
+    cursor: pointer;
 `;
 const Dropdown = styled.div`
     display: ${props => (props.isClicked ? 'block' : 'none')};

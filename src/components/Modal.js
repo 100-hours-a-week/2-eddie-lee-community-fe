@@ -61,6 +61,7 @@ const ModalOkBtn = styled.button`
     background-color: #c4a5fa;
     color: black;
     font-size: 1.25rem;
+    cursor: pointer;
 `;
 
 const ModalCancelBtn = styled.button`
@@ -71,6 +72,7 @@ const ModalCancelBtn = styled.button`
     color: white;
     height: 100%;
     font-size: 1.25rem;
+    cursor: pointer;
 `;
 
 const SetModalBox = ({ title, content, okOnClick, cancelOnClick }) => {

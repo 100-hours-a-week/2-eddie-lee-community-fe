@@ -9,6 +9,7 @@ const MainButton = styled.button`
     height: 40px;
     border-radius: 10px;
     border: none;
+    cursor: pointer;
 `;
 
 const SmallButton = styled.button`
@@ -22,6 +23,7 @@ const SmallButton = styled.button`
     color: #fff;
     margin-left: ${props => props.marginLeft || 0};
     padding: ${props => props.padding || 0};
+    cursor: pointer;
 `;
 
 const ModifyAndDeleteBtn = styled.button`
@@ -30,6 +32,7 @@ const ModifyAndDeleteBtn = styled.button`
     box-shadow: none;
     outline: none;
     border: 1px solid #87CEFA;
+    cursor: pointer;
 `;
 
 export const SetMainButton = ({ label, onClick, valid }) => {
