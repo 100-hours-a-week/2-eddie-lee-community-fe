@@ -121,25 +121,18 @@ const CommentContent = styled.p`
 `;
 
 const SetCommunicationArea = ({ likes, views, comment_count, onClick }) => {
-    const getValue = value => {
-        if (value <= 999) return value;
-        else {
-            return `${parseInt(value / 1000)}k`;
-        }
-    };
-    useEffect(() => {}, []);
     return (
         <CommunicationBtnBox>
             <CommunicationBtn onClick={onClick}>
-                <BtnNumber>{getValue(likes)}</BtnNumber>
+                <BtnNumber>{likes}</BtnNumber>
                 <BtnText>{'좋아요수'}</BtnText>
             </CommunicationBtn>
             <CommunicationBtn>
-                <BtnNumber>{getValue(views)}</BtnNumber>
+                <BtnNumber>{views}</BtnNumber>
                 <BtnText>{'조회수'}</BtnText>
             </CommunicationBtn>
             <CommunicationBtn>
-                <BtnNumber>{getValue(comment_count)}</BtnNumber>
+                <BtnNumber>{comment_count}</BtnNumber>
                 <BtnText>{'댓글'}</BtnText>
             </CommunicationBtn>
         </CommunicationBtnBox>
@@ -150,7 +143,7 @@ const SetPostImg = ({ postImg }) => {
     return <PostImg src={getImgURL(postImg)} />;
 };
 
-const SetCommentBox = ({ postId, editComment, onSave }) => {
+const SetCommentBox = ({ postId, editComment, onSave, updateCount, getCommentData }) => {
     const [content, setContent] = useState('');
 
     useEffect(() => {
@@ -177,8 +170,11 @@ const SetCommentBox = ({ postId, editComment, onSave }) => {
         });
 
         setContent('');
+        getCommentData();
+        if (method === 'POST') {
+            updateCount();
+        }
         if (onSave) onSave();
-        window.location.reload();
     };
     return (
         <CommentBox>
@@ -199,7 +195,7 @@ const SetCommentBox = ({ postId, editComment, onSave }) => {
     );
 };
 
-const SetCommentViewBox = ({ commentData, handleModify, userId }) => {
+const SetCommentViewBox = ({ commentData, handleModify, userId, updateCount, getCommentData }) => {
     const [isEditor, setIsEditor] = useState(false);
     const [profileSrc, setProfileSrc] = useState(defaultProfileImg);
     const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
@@ -220,7 +216,8 @@ const SetCommentViewBox = ({ commentData, handleModify, userId }) => {
             return res.json();
         });
         setIsCommentModalOpen(false);
-        window.location.reload();
+        updateCount();
+        getCommentData();
     };
 
     const handleDelete = async () => {
@@ -260,7 +257,6 @@ const SetCommentViewBox = ({ commentData, handleModify, userId }) => {
         </CommentViewBox>
     );
 };
-
 function PostInfo() {
     const { postId } = useParams();
     const [userId, setUserId] = useState(0);
@@ -269,76 +265,104 @@ function PostInfo() {
     const [isEditor, setIsEditor] = useState(false);
     const [postSrc, setPostSrc] = useState(defaultPostImg);
     const [profileSrc, setProfileSrc] = useState(defaultProfileImg);
-    const [likeCount, setLikeCount] = useState(postData.like);
+    const [likeCount, setLikeCount] = useState(0);
+    const [viewCount, setViewCount] = useState(0);
+    const [commentCount, setCommentCount] = useState(0);
+    const [convertLike, setConverterLike] = useState('');
+    const [convertCommentCount, setConverterCommentCount] = useState('');
+    const [convertView, setConverterView] = useState('');
     const [comments, setComments] = useState([]);
     const [editComment, setEditComment] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userData = await fetch(
-                    `${config.API_URL}/users/session`,
-                    {
-                        method: 'GET',
-                        credentials: 'include',
-                    },
-                ).then(async res => {
-                    if (!res.ok) {
-                        throw new Error('Get user session failed');
-                    }
-                    return await res.json();
-                });
-                setUserId(userData.user_id);
-                await fetch(`${config.API_URL}/posts/${postId}/view`, {
-                    method: 'PATCH',
-                }).then(res => {
-                    if (!res.ok) throw new Error('update view failed');
-                    return res.json();
-                });
-                const data = await fetch(
-                    `${config.API_URL}/posts/${postId}/data`,
-                    {
-                        method: 'GET',
-                        credentials: 'include',
-                    },
-                ).then(async res => {
-                    if (!res.ok) {
-                        throw new Error(`Get post data failed`);
-                    }
-                    return await res.json();
-                });
-                setPostData(data);
-                if (data.user_id === userData.user_id) {
-                    setIsEditor(true);
-                }
-                if (data.image) {
-                    setPostSrc(data.image);
-                }
-                if (data.profileImg) {
-                    setProfileSrc(data.profileImg);
-                }
-                setLikeCount(data.like);
-            } catch (error) {
-                console.error(error);
-            }
-        };
+    const getValue = value => {
+        const parseValue = parseInt(value);
+        if (parseValue <= 999) return `${parseValue}`;
+        else {
+            return `${parseInt(parseValue / 1000)}k`;
+        }
+    };
 
-        const getCommentData = async () => {
-            try {
-                const response = await fetch(
-                    `${config.API_URL}/posts/${postId}/comments`,
-                    {},
-                );
-                if (!response.ok) {
-                    throw new Error('get comment data failed');
+    useEffect(() => {
+        setConverterLike(getValue(likeCount));
+    }, [likeCount]);
+
+    useEffect(() => {
+        setConverterView(getValue(viewCount));
+    }, [viewCount]);
+
+    useEffect(() => {
+        setConverterCommentCount(getValue(commentCount));
+    }, [commentCount]);
+
+    const fetchData = async () => {
+        try {
+            const userData = await fetch(
+                `${config.API_URL}/users/session`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                },
+            ).then(async res => {
+                if (!res.ok) {
+                    throw new Error('Get user session failed');
                 }
-                const commentData = await response.json();
-                setComments(commentData);
-            } catch (e) {
-                console.error(e.message);
+                return await res.json();
+            });
+            setUserId(userData.user_id);
+            await fetch(`${config.API_URL}/posts/${postId}/view`, {
+                method: 'PATCH',
+            }).then(res => {
+                if (!res.ok) throw new Error('update view failed');
+                return res.json();
+            });
+            const data = await fetch(
+                `${config.API_URL}/posts/${postId}/data`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                },
+            ).then(async res => {
+                if (!res.ok) {
+                    throw new Error(`Get post data failed`);
+                }
+                return await res.json();
+            });
+            setPostData(data);
+            if (data.user_id === userData.user_id) {
+                setIsEditor(true);
             }
-        };
+            if (data.image) {
+                setPostSrc(data.image);
+            }
+            if (data.profileImg) {
+                setProfileSrc(data.profileImg);
+            }
+            setLikeCount(data.like);
+            setViewCount(data.view);
+            setCommentCount(data.comment_count);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const getCommentData = async () => {
+        try {
+            const response = await fetch(
+                `${config.API_URL}/posts/${postId}/comments`,
+                {},
+            );
+            if (!response.ok) {
+                throw new Error('get comment data failed');
+            }
+            const commentData = await response.json();
+            setComments(commentData);
+        } catch (e) {
+            console.error(e.message);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
         getCommentData();
     }, []);
@@ -418,15 +442,17 @@ function PostInfo() {
                 </PostImgBox>
                 <PostContent>{postData.content}</PostContent>
                 <SetCommunicationArea
-                    likes={likeCount}
-                    views={postData.view}
-                    comment_count={postData.comment_count}
+                    likes={convertLike}
+                    views={convertView}
+                    comment_count={convertCommentCount}
                     onClick={updateLikes}
                 />
                 <SetCommentBox
                     postId={postId}
                     editComment={editComment}
                     onSave={() => setEditComment(null)}
+                    updateCount={() => setCommentCount(prev => prev + 1)}
+                    getCommentData={getCommentData}
                 />
                 {comments.map((comment, i) => (
                     <SetCommentViewBox
@@ -434,6 +460,8 @@ function PostInfo() {
                         commentData={comment}
                         handleModify={handleCommentModify}
                         userId={userId}
+                        updateCount={() => setCommentCount(prev => prev - 1)}
+                        getCommentData={getCommentData}
                     />
                 ))}
             </PostArticle>
