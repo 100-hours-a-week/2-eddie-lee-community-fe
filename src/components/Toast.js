@@ -1,14 +1,17 @@
 import styled from 'styled-components';
 
 const ToastStyle = styled.div`
-    background-color: #aca0eb;
+    background-color: #87CEFA;
     border-radius: 15px;
-    height: 2%;
+    height: 3vh;
     width: 10%;
     position: absolute;
     z-index: 99;
     margin-left: 10%;
     margin-top: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 const ToastText = styled.p`
@@ -17,7 +20,6 @@ const ToastText = styled.p`
     padding-bottom: 5px;
     text-align: center;
     margin: 0;
-    margin-top: 5%;
 `;
 
 const Toast = () => {

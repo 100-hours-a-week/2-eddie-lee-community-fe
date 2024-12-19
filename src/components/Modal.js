@@ -19,8 +19,8 @@ const ModalScreen = styled.div`
 const ModalBox = styled.div`
     background-color: white;
     border-radius: 10px;
-    width: 30%;
-    height: 15%;
+    width: 35vh;
+    height: 25vh;
     z-index: 99;
     display: flex;
     flex-direction: column;
@@ -58,7 +58,7 @@ const ModalOkBtn = styled.button`
     width: 40%;
     border: none;
     border-radius: 10px;
-    background-color: #c4a5fa;
+    background-color: #87CEFA;
     color: black;
     font-size: 1.25rem;
     cursor: pointer;

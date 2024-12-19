@@ -14,8 +14,8 @@ const HeaderBox = styled.div`
 `;
 
 const GoBackBoxStyle = styled.div`
-    width: 30px;
-    height: 50px;
+    width: 10%;
+    height: 10%;
     justify-self: left;
     overflow: hidden;
     margin: 0;
