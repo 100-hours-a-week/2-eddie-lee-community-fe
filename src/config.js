@@ -1,5 +1,5 @@
 const config = {
-    API_URL: 'http://localhost:3000/api',
+    API_URL: '/api',
     CDN_URL: 'http://dq5lukp1ccg9d.cloudfront.net',
 };
 
