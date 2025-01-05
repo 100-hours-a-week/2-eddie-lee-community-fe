@@ -191,5 +191,4 @@ fabric.properties
 .env
 .idea
 .vscode
-local.conf
 Dockerfile
