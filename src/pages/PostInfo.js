@@ -53,6 +53,9 @@ const PostContent = styled.div`
     width: 80%;
     font-size: 1rem;
     margin: auto auto 20px;
+    overflow-wrap: break-word;
+    max-height: 50%;
+    overflow: auto;
 `;
 
 const CommunicationBtnBox = styled.div`

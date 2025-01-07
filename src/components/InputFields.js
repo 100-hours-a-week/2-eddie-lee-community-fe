@@ -93,6 +93,7 @@ export const InputPostContent = ({ placeholder, onInput, value }) => {
         <InputContent
             type={'textbox'}
             rows={14}
+            wrap={"hard"}
             placeholder={placeholder}
             onInput={onInput}
             value={value}
