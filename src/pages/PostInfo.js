@@ -121,6 +121,9 @@ const CommentViewBox = styled.div`
 `;
 
 const CommentContent = styled.p`
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-all;
     font-size: 1rem;
     margin: 0 0 0 10%;
 `;
