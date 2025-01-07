@@ -72,7 +72,7 @@ const CommunicationBtnBox = styled.div`
 const CommunicationBtn = styled.button`
     width: 30%;
     border: none;
-    background-color: inherit;
+    background-color: ${props => (!props.isLike ? '#87CEFA' : '#4682B4')};
     border-radius: 10px;
     height: 100%;
     padding: 5%;
@@ -128,10 +128,10 @@ const CommentContent = styled.p`
     margin: 0 0 0 10%;
 `;
 
-const SetCommunicationArea = ({ likes, views, comment_count, onClick }) => {
+const SetCommunicationArea = ({ likes, views, comment_count, onClick, isLike }) => {
     return (
         <CommunicationBtnBox>
-            <CommunicationBtn onClick={onClick}>
+            <CommunicationBtn onClick={onClick} isLike={isLike}>
                 <BtnNumber>{likes}</BtnNumber>
                 <BtnText>{'좋아요수'}</BtnText>
             </CommunicationBtn>
@@ -281,6 +281,7 @@ function PostInfo() {
     const [convertView, setConverterView] = useState('');
     const [comments, setComments] = useState([]);
     const [editComment, setEditComment] = useState(null);
+    const [isLike, setIsLike] = useState(false);
     const navigate = useNavigate();
 
     const getValue = value => {
@@ -349,6 +350,7 @@ function PostInfo() {
             setLikeCount(data.like);
             setViewCount(data.view);
             setCommentCount(data.comment_count);
+            setIsLike(data.isLike);
         } catch (error) {
             console.error(error);
         }
@@ -377,15 +379,16 @@ function PostInfo() {
 
     const updateLikes = async () => {
         try {
-            await fetch(`${config.API_URL}/posts/${postId}/like`, {
-                method: 'PATCH',
-            }).then(res => {
-                if (!res.ok) throw new Error('update like failed');
-                else {
-                    return res.json();
-                }
-            });
-            setLikeCount(prev => prev + 1);
+                await fetch(`${config.API_URL}/posts/${postId}/like`, {
+                    method: isLike ? 'DELETE' : 'GET',
+                }).then(res => {
+                    if (!res.ok) throw new Error('update like failed');
+                    else {
+                        return res.json();
+                    }
+                });
+                setLikeCount(prev => isLike ? prev - 1 : prev + 1);
+                setIsLike(!isLike);
         } catch (error) {
             console.error(error);
         }
@@ -454,6 +457,7 @@ function PostInfo() {
                     views={convertView}
                     comment_count={convertCommentCount}
                     onClick={updateLikes}
+                    isLike={isLike}
                 />
                 <SetCommentBox
                     postId={postId}
