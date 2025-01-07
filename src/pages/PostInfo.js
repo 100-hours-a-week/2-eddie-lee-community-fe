@@ -56,6 +56,8 @@ const PostContent = styled.div`
     overflow-wrap: break-word;
     max-height: 50%;
     overflow: auto;
+    white-space: pre-wrap;
+    word-wrap: break-all;
 `;
 
 const CommunicationBtnBox = styled.div`
