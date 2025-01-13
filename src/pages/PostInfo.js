@@ -271,7 +271,7 @@ function PostInfo() {
     const [postData, setPostData] = useState({});
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
     const [isEditor, setIsEditor] = useState(false);
-    const [postSrc, setPostSrc] = useState(defaultPostImg);
+    const [postSrc, setPostSrc] = useState(null);
     const [profileSrc, setProfileSrc] = useState(defaultProfileImg);
     const [likeCount, setLikeCount] = useState(0);
     const [viewCount, setViewCount] = useState(0);
@@ -448,9 +448,9 @@ function PostInfo() {
                     )}
                 </EditorDiv>
                 <PostHorizontalRule />
-                <PostImgBox>
+                {postSrc && (<PostImgBox>
                     <SetPostImg postImg={postSrc} />
-                </PostImgBox>
+                </PostImgBox>)}
                 <PostContent>{postData.content}</PostContent>
                 <SetCommunicationArea
                     likes={convertLike}
