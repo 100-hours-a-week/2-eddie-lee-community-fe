@@ -75,9 +75,7 @@ function EditPasswd() {
 
     const handleSubmit = async () => {
         const modifyPasswd = btoa(passwd);
-        const passwdJSON = JSON.stringify(modifyPasswd);
-        // const formData = new FormData();
-        // formData.append('modifyPasswd', btoa(passwd));
+        const passwdJSON = JSON.stringify({modifyPasswd});
         await fetch(`${config.API_URL}/users/passwd`, {
             method: 'PATCH',
             headers: {
